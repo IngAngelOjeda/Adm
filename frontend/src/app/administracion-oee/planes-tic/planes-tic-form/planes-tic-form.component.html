@@ -1,0 +1,66 @@
+<p-dialog 
+    header="{{ 'Planes TIC' }}" 
+    styleClass="p-fluid" 
+    [style]="{ width: '650px', 'overflow':'auto' }"
+    [maximizable]="true"
+    [contentStyle]="{'overflow': 'visible'}" 
+    [modal]="true" 
+    [(visible)]="visible"
+    (onHide)="close()">
+
+    <form [formGroup]="form" (ngSubmit)="guardar(form.value)"> 
+        <p-tabView>
+                <div class="formgrid grid">
+                    <div class="field col-6 md:col-6">
+                        <label for="anho">Año <span class="error">*</span></label>
+                        <input type="text" pInputText id="anho" formControlName="anho" required placeholder="XXXX" autocomplete="off" (input)="onlyNumericInput($event.target)">
+                        <small class="invalid" *ngIf="submitted && form.get('anho').errors?.required">Año es requerido.</small>
+                    </div>
+                    <div class="field col-6 md:col-6">
+                        <label for="fecha">Fecha <span class="error">*</span></label>
+                        <p-calendar formControlName="fecha" [showIcon]="true" dateFormat="dd-mm-yy" dataType="string" name="fecha" [monthNavigator]='true' [yearNavigator]="true" yearRange="{{yearStart}}:{{yearFinal}}" appendTo="body"></p-calendar>
+                        <small class="invalid" *ngIf="submitted && form.controls.fecha.errors?.required">La fecha es requerida.</small>
+                    </div>
+
+                    <div class="field col-12 md:col-12">
+                        <label for="linkPlan">Link del Plan <span class="error">*</span></label>
+                        <input type="text" pInputText id="linkPlan" formControlName="linkPlan" required placeholder="https://www.ejemplo.com.py/" autocomplete="off">
+                        <small class="invalid" *ngIf="submitted && form.get('linkPlan').errors?.required">Link es requerido.</small>
+                    </div>
+                    <div class="field col-4 md:col-4">
+                        <label for="cantidadFuncionariosTic">Cant. Func. TIC <span class="error">*</span></label>
+                        <input type="text" pInputText id="cantidadFuncionariosTic" formControlName="cantidadFuncionariosTic" required placeholder="" autocomplete="off" (input)="onlyNumericInput($event.target)">
+                        <small class="invalid" *ngIf="submitted && form.get('cantidadFuncionariosTic').errors?.required">Cantidad de Func. TIC es requerido.</small>
+                    </div>
+                    <div class="field col-4 md:col-4">
+                        <label for="cantidadFuncionariosAdmin">Cant. Func. Administrativos <span class="error">*</span></label>
+                        <input type="text" pInputText id="cantidadFuncionariosAdmin" formControlName="cantidadFuncionariosAdmin" required placeholder="" autocomplete="off" (input)="onlyNumericInput($event.target)">
+                        <small class="invalid" *ngIf="submitted && form.get('cantidadFuncionariosAdmin').errors?.required">Cantidad de Func. Administrativos es requerido.</small>
+                    </div>
+                    <div class="field col-4 md:col-4">
+                        <label for="presupuestoTicAnual">Pres. TIC Anual <span class="error">*</span></label>
+                        <input type="text" pInputText id="presupuestoTicAnual" formControlName="presupuestoTicAnual" required placeholder="" autocomplete="off" (input)="separadorMilesOnInput($event.target)">
+                        <small class="invalid" *ngIf="submitted && form.get('presupuestoTicAnual').errors?.required">Presupuesto anual TIC es requerido.</small>
+                    </div>
+                </div>
+        </p-tabView>
+
+        <p-footer class="footer">
+            <div class="grid">
+                <div class="col-6 col-md-6">
+                    <button type="submit" pButton label="Guardar" icon="pi pi-save" class="p-button-outlined"></button>
+                </div>
+                <div class="col-6 col-md-6">
+                    <button type="button" pButton (click)="close()" label="Cancelar"
+                        class="p-button-danger p-button-text"></button>
+                </div>
+            </div>
+        </p-footer>
+
+    </form>
+
+    <ng-template pTemplate="footer">
+        <span style="color: red;font-size: 11px;">(*) Son campos obligatorios</span>
+    </ng-template>
+
+</p-dialog>

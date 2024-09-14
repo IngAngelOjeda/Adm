@@ -1,0 +1,77 @@
+<p-dialog header="{{ 'Servicios' }}" styleClass="p-fluid" [style]="{ width: '60%', 'overflow':'auto' }"
+    [maximizable]="true" [contentStyle]="{'overflow': 'visible'}" [modal]="true" [(visible)]="visible"
+    (onHide)="close()">
+
+    <form [formGroup]="form" (ngSubmit)="guardar(form.value)">
+        <div class="formgrid grid">
+            <div class="field col-12 md:col-12">
+                <label for="nombreServicio">Nombre <span class="error">*</span></label>
+                <input type="text" pInputText id="nombreServicio" formControlName="nombreServicio" required placeholder="Ingrese el nombre del servicio" autocomplete="off">
+                <small class="invalid" *ngIf="submitted && form.get('nombreServicio').errors?.required">Nombre del servicio es requerido.</small>
+            </div>
+            <div class="field col-12 md:col-12">
+                <label for="descripcionServicio">De qué se trata el servicio<span class="error">*</span></label>
+                <textarea rows="4" type="text" pInputTextarea formControlName="descripcionServicio" required placeholder="Ingrese de que se trata el servicio" autocomplete="off"></textarea>
+                <small class="invalid" *ngIf="submitted && form.controls.descripcionServicio.errors?.required">La descripcion del sistema es requerido.</small>
+            </div>
+            <div class="field col-12 md:col-12">
+                <label for="oee">Oee <span class="error">*</span></label>
+                <p-dropdown appendTo="body" [options]="instituciones" formControlName="oee" defaultLabel="Seleccione una institución" optionLabel="nombre" display="chip" [filter]="true" filterBy="nombre" [showClear]="true" placeholder="Seleccione una Institución" emptyFilterMessage="Sin resultados"></p-dropdown>
+                <small class="invalid" *ngIf="submitted && form.controls.oee.errors?.required">La institución es requerido.</small>
+            </div>
+            <div class="field col-12 md:col-12">
+                <label for="etiquetas">Etiquetas <span class="error">*</span></label>
+                <p-multiSelect appendTo="body" [options]="etiquetas" formControlName="etiquetas" defaultLabel="Seleccione las etiquetas" optionLabel="nombreEtiqueta" display="chip" [filter]="true" filterBy="nombreEtiqueta" placeholder="Seleccione las Etiquetas" emptyFilterMessage="Sin resultados">
+                    <ng-template let-etiqueta pTemplate="item">
+                        <div title="{{ etiqueta.nombreEtiqueta }}" class="capitalize">{{ etiqueta.nombreEtiqueta }}</div>
+                    </ng-template>
+                </p-multiSelect>
+                <small class="invalid" *ngIf="submitted && form.controls.etiquetas.errors?.required">La etiqueta es requerida.</small>
+            </div>
+            <div class="field col-12 md:col-12">
+                <label for="requisitos">Requisitos <span class="error">*</span></label>
+                <p-multiSelect appendTo="body" [options]="requisitos" formControlName="requisitos" defaultLabel="Seleccione los requisitos" optionLabel="nombreRequisito" display="chip" [filter]="true" filterBy="nombreRequisito" placeholder="Seleccione los Requisitos" emptyFilterMessage="Sin resultados">
+                    <ng-template let-requisito pTemplate="item">
+                        <div title="{{ requisito.nombreRequisito }}" class="descripcion-corta">{{ requisito.nombreRequisito }}</div>
+                    </ng-template>
+                </p-multiSelect>
+                <small class="invalid" *ngIf="submitted && form.controls.requisitos.errors?.required">El requisito es requerido.</small>
+            </div>
+            <div class="field col-12 md:col-12 ">
+                <label for="clasificadores">Categorias <span class="error">*</span></label>
+                <p-multiSelect appendTo="body" [options]="clasificadores" formControlName="clasificadores" defaultLabel="Seleccione las categorias" optionLabel="nombreClasificador" display="chip" [filter]="true" filterBy="nombreClasificador" placeholder="Seleccione las Categorias" emptyFilterMessage="Sin resultados"></p-multiSelect>
+                <small class="invalid" *ngIf="submitted && form.controls.clasificadores.errors?.required">La categoria es requerida.</small>
+            </div>
+            <div class="mt-2 mb-2 col-6 md:col-6">
+                <p-checkbox binary="true" formControlName="destacado" id="destacado"></p-checkbox>
+                <label class="ml-3" for="destacado">¿Destacado?</label>
+            </div>
+            <div class="mt-2 mb-2 col-6 md:col-6">
+                <p-checkbox binary="true" formControlName="checkOnline" id="checkOnline"></p-checkbox>
+                <label class="ml-3" for="checkOnline">¿Es un servicio en linea?</label>
+            </div>
+            <div class="field mt-4 col-12 md:col-12" *ngIf="form.get('checkOnline').value">
+                <label for="urlOnline">Url o enlace al servicio </label>
+                <input type="text" pInputText id="urlOnline" formControlName="urlOnline"
+                    placeholder="Ingrese la URL del servicio en linea" autocomplete="off">
+            </div>
+        </div>
+
+        <p-footer class="footer">
+            <div class="grid">
+                <div class="col-6 col-md-6">
+                    <button type="submit" pButton label="Guardar" icon="pi pi-save" class="p-button-outlined"></button>
+                </div>
+                <div class="col-6 col-md-6">
+                    <button type="button" pButton (click)="close()" label="Cancelar" class="p-button-danger p-button-text"></button>
+                </div>
+            </div>
+        </p-footer>
+
+    </form>
+
+    <ng-template pTemplate="footer">
+        <span style="color: red;font-size: 11px;">(*) Son campos obligatorios</span>
+    </ng-template>
+
+</p-dialog>

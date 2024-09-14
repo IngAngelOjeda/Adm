@@ -1,0 +1,52 @@
+
+<div class="pages-body login-page flex flex-column">
+    
+    <div class="mt-6 flex justify-content-center">
+		<img src="assets/layout/images/logoInstitucion.png" 
+        style="width: 100%;max-width: 150px;height: auto;">
+	</div>
+
+    <div class="align-self-center mt-auto mb-auto">
+        <div class="pages-panel card flex flex-column px-6">
+
+            <div class="mt-4 mb-4">
+                <h1 class="m-0 text-primary font-semibold text-4xl"> Restablecer Contraseña </h1>
+                <span class="block text-700 mt-2">Ingrese su correo electrónico para solicitar el cambio de clave.</span>
+            </div>
+
+            <form [formGroup]="recuperarClaveForm" (ngSubmit)="recuperarClave()" autocomplete="off" class="mt-3">
+                <div class="input-panel flex flex-column mb-6">
+                    <div class="p-inputgroup">
+
+                        <span class="p-inputgroup-addon">
+                            <i class="pi pi-envelope" *ngIf="!loading"></i>
+                            <i class="pi pi-spin pi-spinner" *ngIf="loading" style="font-size: 1rem"></i>
+                        </span>
+                        <span class="p-float-label">
+                            <input type="text" id="username" [formControl]="recuperarClaveForm.controls['username']" pInputText>
+                            <label for="username">E-mail</label>
+                        </span>
+                    </div>
+                    <div *ngIf="recuperarClaveForm.controls['username'].hasError('required') && recuperarClaveForm.controls['username'].touched">
+                        <p-message severity="error" text="E-mail del usuario requerido"></p-message>
+                    </div>      
+
+                </div>
+                <button pbutton="" pripple="" class="p-element p-ripple w-full p-button p-component mb-4" tabindex="0" [disabled]="recuperarClaveForm.invalid || loading" label="Recuperar Clave">
+                    <span class="p-button-label">{{loading ? 'AUTORIZANDO...':'ENVIAR'}} <i class="pi pi-spin pi-spinner" *ngIf="loading" style="font-size: 1rem"></i></span>
+                    <span class="p-ink"></span>
+                </button>
+                <a  href="#/login" label="Cambiar password" class="p-element p-ripple w-full p-button-text text-primary-500 p-button p-component">
+                    <span class="p-button-label">Volver al Inicio</span>
+                    <span class="p-ink"></span>
+                </a>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <img src="https://cdn.paraguay.gov.py/marca-SENATICs/marca-senatics-desarrollado-por-ALT.png"
+            style="width: 5%; min-width: 250px;" />
+    </footer>
+</div> 
+<p-toast preventOpenDuplicates="true"></p-toast>

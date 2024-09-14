@@ -1,0 +1,52 @@
+<p-dialog 
+    header="{{ 'Dependencias' }}" 
+    styleClass="p-fluid" 
+    [style]="{ width: '650px', 'overflow':'auto' }"
+    [maximizable]="true"
+    [contentStyle]="{'overflow': 'visible'}" 
+    [modal]="true" 
+    [(visible)]="visible"
+    (onHide)="close()"
+    >
+
+    <form [formGroup]="form" (ngSubmit)="guardar(form.value)"> 
+        <p-tabView>
+                <div class="formgrid grid">
+                    <div class="field col-12 md:col-12">
+                        <label for="codigo">Código <span class="error">*</span></label>
+                        <input type="text" pInputText id="codigo" formControlName="codigo" required placeholder="" autocomplete="off">
+                        <small class="invalid" *ngIf="submitted && form.get('codigo').errors?.required">Código es requerido.</small>
+                    </div>
+                    <div class="field col-12 md:col-12">
+                        <label for="descripcionDependencia">Descripción <span class="error">*</span></label>
+                        <input type="text" pInputText id="descripcionDependencia" formControlName="descripcionDependencia" required placeholder="" autocomplete="off">
+                        <small class="invalid" *ngIf="submitted && form.get('descripcionDependencia').errors?.required">Descripción es requerida.</small>
+                    </div>
+
+                    <div class="field col-12 md:col-12">
+                        <label for="oee">Dependencia Padre </label>
+                        <p-dropdown appendTo="body" [options]="dependencia_padre" formControlName="idDependenciaPadre" defaultLabel="Seleccione una Dependencia" optionLabel="nombre" display="chip" [filter]="true" filterBy="nombre" [showClear]="true" placeholder="Seleccione una Dependencia" emptyFilterMessage="Sin resultados">
+                        </p-dropdown>
+                    </div>
+                </div>
+        </p-tabView>
+
+        <p-footer class="footer">
+            <div class="grid">
+                <div class="col-6 col-md-6">
+                    <button type="submit" pButton label="Guardar" icon="pi pi-save" class="p-button-outlined"></button>
+                </div>
+                <div class="col-6 col-md-6">
+                    <button type="button" pButton (click)="close()" label="Cancelar"
+                        class="p-button-danger p-button-text"></button>
+                </div>
+            </div>
+        </p-footer>
+
+    </form>
+
+    <ng-template pTemplate="footer">
+        <span style="color: red;font-size: 11px;">(*) Son campos obligatorios</span>
+    </ng-template>
+
+</p-dialog>

@@ -1,0 +1,126 @@
+<div class="p-grid" *ngIf="checkPermission('ver:menu:administracion:sistemas')">
+    <div class="p-col-12 p-md-12">
+        <div class="card">
+
+            <p-toolbar styleClass="p-mb-12">
+                <h5 class="p-m-0">Sistemas</h5>
+                <ng-template pTemplate="right">
+                    <p-splitButton label="Agregar" icon="pi pi-plus" (onClick)="openNew()" [model]="items" *ngIf="checkPermission('sistemas:crear')"></p-splitButton>
+                </ng-template>
+            </p-toolbar>
+
+            <p-toast></p-toast>
+
+            <p-blockUI [target]="table" [blocked]="block">
+                <p-progressSpinner class="spinner-position"></p-progressSpinner>
+            </p-blockUI>
+
+            <form (ngSubmit)="table.filterGlobal('', 'contains')">
+                <p-table
+                    #table
+                    dataKey="id"
+                    styleClass="p-datatable-styles"
+                    selectionMode="single"
+                    paginatorPosition="bottom"
+                    [columns]="cols"
+                    [value]="sistemas"
+                    [rows]="pageSize"
+                    [totalRecords]="totalRecords"
+                    [loading]="loading"
+                    [paginator]="true"
+                    [resizableColumns]="true"
+                    [sortOrder]="-1"
+                    [autoLayout]="true"
+                    [lazy]="true"
+                    (onLazyLoad)="load($event)"
+                >
+
+                    <ng-template pTemplate="header" let-columns>
+                        <tr [formGroup]="searchFormGroup">
+                            <th pResizableColumn style="width:16.6%">
+                                <div pSortableColumn="nombre" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Nombre  <p-sortIcon field="nombre"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="nombre" style="width:100%">
+                            </th>
+                            <th pResizableColumn style="width:16.6%">
+                                <div pSortableColumn="objetoProposito" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Objetivo o propósito del Sistema <p-sortIcon field="objetoProposito"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="objetoProposito" style="width:100%">
+                            </th>
+                            <th pResizableColumn style="width:16.6%">
+                                <div pSortableColumn="areaResponsable" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Área técnica responsable <p-sortIcon field="areaResponsable"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="areaResponsable" style="width:100%">
+                            </th>
+                            <th pResizableColumn style="width:16.6%">
+                                <div pSortableColumn="descripcionOee" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    OEE <p-sortIcon field="descripcionOee"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="descripcionOee" style="width:100%">
+                            </th>
+                            <th  pResizableColumn style="width:16.6%; text-align: center;vertical-align: top;">
+                                <div class="p-d-flex p-jc-between p-ai-center">Acciones</div>
+                            </th>
+                            <input type="submit" hidden>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-row *ngIf="checkPermission('sistemas:listar')">
+                        <tr class="p-selectable-row">
+                            <td>
+                                <span class="p-column-title">Nombre</span>
+                                {{ row?.nombre }}
+                            </td>
+                            <td class="descripcion-corta" title="{{ row?.objetoProposito }}">
+                                <span class="p-column-title">Objetivo o propósito del Sistema</span>
+                                {{ row?.objetoProposito }}
+                            </td>
+                            <td>
+                                <span class="p-column-title">Área técnica responsable</span>
+                                {{ row?.areaResponsable }}
+                            </td>
+                            <td class="descripcion-corta" title="{{ row?.oee.descripcionOee }}">
+                                <span class="p-column-title">OEE</span>
+                                {{ row?.oee.descripcionOee }}
+                            </td>
+                            <td style="text-align: center;">
+                                <span class="p-column-title">Acciones</span>
+                                <button pButton type="button" class="p-button-success" icon="pi pi-check-circle" *ngIf="row?.estado === 'A' && checkPermission('sistemas:editar')" pTooltip="Inactivar" (click)="updateStatus(row)"></button>
+                                <button pButton type="button" class="p-button-danger" icon="pi pi-circle-off" *ngIf="row?.estado  === 'I' && checkPermission('sistemas:editar')" pTooltip="Activar" (click)="updateStatus(row)"></button>
+                                <button pButton type="button" *ngIf="checkPermission('sistemas:editar')" icon="pi pi-pencil" class="p-button-warning ml-2" pTooltip="Editar" (click)="openEdit(row)"></button>
+                                <button pButton type="button" *ngIf="checkPermission('sistemas:borrar')" icon="pi pi-trash" class="p-button-danger ml-2" pTooltip="Eliminar" (click)="delete(row)"></button>
+                            </td>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="4">No se encontraron datos disponibles</td>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="summary">
+                        <div class="flex align-items-center justify-content-between">
+                            Total {{ sistemas ? totalRecords : 0 }}.
+                        </div>
+                    </ng-template>
+
+                </p-table>
+            </form>
+
+            <app-sistemas-form
+                [row]="entity"
+                [(visible)]="showDialog"
+                (onResponse)="onResponse($event)"
+                (setVisible)="changeDialogVisibility($event)">
+            </app-sistemas-form>
+
+            <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+        </div>
+    </div>
+</div>
+

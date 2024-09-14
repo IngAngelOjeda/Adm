@@ -1,0 +1,116 @@
+<p-dialog
+    header="{{ 'Usuario' }}"
+    styleClass="p-fluid"
+    [style]="{ width: '650px', 'overflow':'auto' }"
+    [maximizable]="true"
+    [contentStyle] = "{'overflow': 'visible'}"
+    [modal]="true"
+    [(visible)]="visible"
+    (onHide)="close()">
+
+    <form [formGroup]="form" (ngSubmit)="guardar(form.value)">
+        <div class="formgrid grid">
+            <!--div class="col-12 md-12"-->
+
+                <p-divider class="p-field p-col-12 p-md-12 w-full" layout="horizontal">
+                    <span class="p-tag">Identificación del usuario</span>
+                </p-divider>
+
+                <div class="field col-12 md:col-6">
+                    <label for="nombre">Nombres <span class="error">*</span></label>
+                    <input type="text" pInputText id="nombre" formControlName="nombre" required (input)="$event.target.value = $event.target.value.toUpperCase()" placeholder="nombres">
+                    <small class="invalid" *ngIf="submitted && form.controls.nombre.errors?.required">El nombre es requerido.</small>
+                </div>
+
+                <div class="field col-12 md:col-6">
+                    <label for="apellido">Apellidos <span class="error">*</span></label>
+                    <input type="text" pInputText id="apellido" formControlName="apellido" required (input)="$event.target.value = $event.target.value.toUpperCase()" placeholder="apellidos">
+                    <small class="invalid" *ngIf="submitted && form.controls.apellido.errors?.required">El apellido es requerido.</small>
+                </div>
+                
+                
+                <div class="field col-12 md:col-12">
+                    <label for="oee">Institución <span class="error">*</span></label>
+                    <p-dropdown appendTo="body" [options]="instituciones" formControlName="oee" defaultLabel="Seleccione una institución" optionLabel="nombre" display="chip" [filter]="true" filterBy="nombre" [showClear]="true" placeholder="Seleccione una Institución" emptyFilterMessage="Sin resultados">
+                    </p-dropdown>
+                    <small class="invalid" *ngIf="submitted && form.controls.oee.errors?.required">La institución es requerido.</small>
+                </div>
+
+                <div class="field col-12 md:col-8">
+                    <label for="cargo">Cargo </label>
+                    <input type="text" pInputText id="cargo" (input)="$event.target.value = $event.target.value.toUpperCase()" formControlName="cargo" placeholder="cargo">                    
+                </div>
+
+                <div class="field col-12 md:col-4">
+                    <label for="telefono">Teléfono <span class="error">*</span></label>
+                    <!--input type="text" pInputText id="telefono" formControlName="telefono" placeholder="telefono"-->
+                    <p-inputMask mask="9999 999 999" id="telefono" formControlName="telefono" placeholder="9999 999 999" required></p-inputMask>
+                    <small class="invalid" *ngIf="submitted && form.controls.telefono.errors?.required">El teléfono particular es requerido.</small>
+                </div>
+
+            <!--/div-->
+
+            <!--div class="col-6 md-12"-->
+
+                <p-divider class="p-field p-col-12 p-md-12 w-full" layout="horizontal">
+                    <span class="p-tag">Datos para inicio de sesión</span>
+                </p-divider>
+
+                <div class="field col-12 md:col-4 ">
+                    <label for="username">Email de usuario (username) <span class="error">*</span></label>
+                    <!-- <span class="p-input-icon-left"> -->
+                        <!-- <i class="pi pi-at"></i> -->
+                        <input type="email" pInputText id="username" (input)="$event.target.value = $event.target.value.toLowerCase()" formControlName="username" required placeholder="email de usuario" [attr.disabled]="readonly? true : null">
+                    <!-- </span> -->
+                    <small class="invalid" *ngIf="submitted && form.controls.username.errors?.required">El nombre de usuario es requerido.</small>
+                    <small class="invalid" *ngIf="submitted && form.controls.username.errors?.pattern">El formato del correo electrónico no es válido.</small>
+                    <small *ngIf="!row?.estado && row?.username != null" class="block text-orange-600">El usuario está inactivo.</small>
+                </div>    
+
+                <div class="field col-12 md:col-5">
+                    <label for="cedula">Cedula de Identidad <span class="error">*</span></label>
+                    <input type="text" pInputText id="cedula" formControlName="cedula" placeholder="cedula" required>
+                    <small class="invalid" *ngIf="submitted && form.controls.cedula.errors?.required">El correo es requerido.</small>
+
+                </div>
+
+                <div class="field col-12 md:col-3">
+                    <label for="fechaExpiracion">Fecha de Expiración <span class="error">*</span></label>
+                    <p-calendar formControlName="fechaExpiracion" [showIcon]="true" dateFormat="dd-mm-yy" dataType="string" name="fechaExpiracion" [monthNavigator]='true' [yearNavigator]="true" yearRange="{{yearStart}}:{{yearFinal}}" appendTo="body"></p-calendar>
+                    <small class="invalid" *ngIf="submitted && form.controls.fechaExpiracion.errors?.required">La fecha de expiración es requerido.</small>
+                </div>
+
+                <div class="field col-12 md:col-12">
+                    <label for="roles">Roles <span class="error">*</span></label>
+                    <p-multiSelect appendTo="body" [options]="roles" formControlName="roles" defaultLabel="seleccione un rol" optionLabel="nombre" display="chip" emptyFilterMessage="Sin resultados">
+                    </p-multiSelect>
+                    <small class="invalid" *ngIf="submitted && form.controls.roles.errors?.required">Seleccione un rol.</small>
+                </div>
+
+                <div class="field col-12 md:col-12">
+                    <label for="justificacionAlta">Justificación Alta <span class="error">*</span></label>
+                    <textarea rows="3" type="text" pInputTextarea id="justificacionAlta" formControlName="justificacionAlta" placeholder="" autocomplete="off"></textarea>
+                    <small class="invalid" *ngIf="submitted && form.controls.justificacionAlta.errors?.required">Debe cargar una justifiación del alta.</small>
+                </div>
+
+            <!--/div-->            
+        </div>
+
+        <p-footer class="footer">
+            <div class="grid">
+                <div class="col-6 col-md-6">
+                    <button type="submit" pButton label="Guardar" icon="pi pi-save" class="p-button-outlined"></button>
+                </div>
+                <div class="col-6 col-md-6">
+                    <button type="button" pButton (click)="close()" label="Cancelar" class="p-button-danger p-button-text"></button>
+                </div>
+            </div>
+        </p-footer>
+
+    </form>
+
+    <ng-template pTemplate="footer">
+        <span style="color: red;font-size: 11px;">(*) Son campos obligatorios</span>
+    </ng-template>
+
+</p-dialog>

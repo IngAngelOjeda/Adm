@@ -1,0 +1,174 @@
+<div class="p-grid" *ngIf="checkPermission('ver:menu:administracion:servicios')">
+    <div class="p-col-12 p-md-12">
+            <div class="card">
+    
+                <p-toolbar styleClass="p-mb-12">
+                    <h5 class="p-m-0">Servicios</h5>
+                        <ng-template pTemplate="right">
+                            <button pButton class="p-button-success mr-2" label="Confirmar servicios" icon="pi pi-check" (click)="confirmAllServices()" *ngIf="checkPermission('oee:servicio:confirmarServicios')"></button>
+                            <p-splitButton label="Agregar" icon="pi pi-plus" (onClick)="openNew()" [model]="items" *ngIf="checkPermission('servicioOee:crear')"></p-splitButton>
+                        </ng-template>
+
+                </p-toolbar>
+                <p-toast></p-toast>
+    
+                <p-blockUI [target]="table" [blocked]="block">
+                    <p-progressSpinner class="spinner-position"></p-progressSpinner>
+                </p-blockUI>
+    
+                <form (ngSubmit)="table.filterGlobal('', 'contains')">
+                    <p-table
+                        #table
+                        dataKey="id"
+                        styleClass="p-datatable-styles"
+                        selectionMode="single"
+                        paginatorPosition="bottom"
+                        [columns]="cols"
+                        [value]="servicios"
+                        [rows]="pageSize"
+                        [totalRecords]="totalRecords"
+                        [loading]="loading"
+                        [paginator]="true"
+                        [resizableColumns]="true"
+                        [sortOrder]="-1"
+                        [autoLayout]="true"
+                        [lazy]="true"
+                        (onLazyLoad)="load($event)">
+    
+                        <ng-template pTemplate="header" let-columns>
+                            <tr [formGroup]="searchFormGroup">
+
+                                <th pResizableColumn>
+                                    <div pSortableColumn="nombreServicio" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                        Nombre<p-sortIcon field="nombreServicio"></p-sortIcon>
+                                    </div>
+                                    <input pInputText formControlName="nombreServicio" style="width:100%">
+                                </th>
+
+                                <th pResizableColumn>
+                                    <div pSortableColumn="descripcionServicio" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                        ¿De que se trata?  <p-sortIcon field="descripcionServicio"></p-sortIcon>
+                                    </div>
+                                    <input pInputText formControlName="descripcionServicio" style="width:100%">
+                                </th>
+
+                                <th pResizableColumn>
+                                    <div pSortableColumn="descripcionOee" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                        Institución  <p-sortIcon field="descripcionOee"></p-sortIcon>
+                                    </div>
+                                    <input pInputText formControlName="descripcionOee" style="width:100%">
+                                </th>
+
+                                <th pResizableColumn>
+                                    <div pSortableColumn="urlOnline" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                        URL del Servicio <p-sortIcon field="urlOnline"></p-sortIcon>
+                                    </div>
+                                    <input pInputText formControlName="urlOnline" style="width:100%">
+                                </th>
+
+                                <th pResizableColumn style="vertical-align: top; text-align: center;">
+                                    <div pSortableColumn="destacado" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                        Es destacado  <p-sortIcon field="destacado"></p-sortIcon>
+                                    </div>
+                                </th>
+
+                                <th pResizableColumn style="vertical-align: top;">
+                                    <div pSortableColumn="fechaCreacion" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                        Fecha Creacion  <p-sortIcon field="fechaCreacion"></p-sortIcon>
+                                    </div>
+                                </th>
+
+                                <th pResizableColumn style="vertical-align: top;">
+                                    <div pSortableColumn="fechaModificacion" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                        Fecha modificación<p-sortIcon field="fechaModificacion"></p-sortIcon>
+                                    </div>
+                                </th>
+    
+                                <th  pResizableColumn style="width:16.6%; text-align: center;vertical-align: top;">
+                                    <div class="p-d-flex p-jc-between p-ai-center">Acciones</div>
+                                </th>
+
+                                <input type="submit" hidden>
+                            </tr>
+                        </ng-template>
+    
+                        <ng-template pTemplate="body" let-row *ngIf="checkPermission('servicioOee:listar')">
+                            <tr class="p-selectable-row">
+                                <td class="descripcion-corta" title="{{ row?.nombreServicio}}">
+                                    <span class="p-column-title"></span>
+                                    {{ row?.nombreServicio }}
+                                </td>
+                                <td class="descripcion-corta" title="{{ row?.descripcionServicio}}">
+                                    <span class="p-column-title"></span>
+                                    {{ row?.descripcionServicio }}
+                                </td>
+                                <td class="descripcion-corta" title="{{ row?.oee.descripcionOee}}">
+                                    <span class="p-column-title"></span>
+                                    {{ row?.oee.descripcionOee }}
+                                </td>
+                                <td class="descripcion-corta" title="{{ row?.urlOnline}}">
+                                    <span class="p-column-title"></span>
+                                    <a href="{{ row?.urlOnline }}" style="color: #0000FF;" target="_blank">{{ row?.urlOnline }}</a>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span>{{ row?.destacado ? 'SI' : 'NO' }}</span>
+                                </td>
+                                <td style="text-align: right;">
+                                    <span class="p-column-title">{{ row?.fechaCreacion }}</span>
+                                    {{ (row.fechaCreacion ? (row.fechaCreacion | date : 'dd/MM/yyyy') : '-') }}
+                                </td>
+                                <td style="text-align: right;">
+                                    <span class="p-column-title">{{ row?.fechaModificacion }}</span>
+                                    {{ (row.fechaModificacion ? (row.fechaModificacion | date : 'dd/MM/yyyy') : '-') }}
+                                </td>
+                                
+                                <td style="text-align: center;">
+                                    <span class="p-column-title">Acciones</span>
+                                    <button pButton type="button" class="p-button-success mr-1 ml-2" icon="pi pi-check-circle" *ngIf="row?.estadoServicio == 'A' && checkPermission('servicioOee:editar')" pTooltip="Inactivar" (click)="updateStatus(row)"></button>
+                                    <button pButton type="button" class="p-button-danger mr-1" icon="pi pi-circle-off" *ngIf="row?.estadoServicio == 'I' && checkPermission('servicioOee:editar')" pTooltip="Activar" (click)="updateStatus(row)"></button>
+                                    <button pButton type="button" icon="pi pi-pencil" class="p-button-warning mr-1" *ngIf="checkPermission('servicioOee:editar')" pTooltip="Editar" (click)="openEdit(row)"></button>
+                                    <button pButton type="button" *ngIf="checkPermission('servicioOee:servicioInformacion:obtener')" icon="pi pi-list" class="p-button-primary mr-1" pTooltip="Servicio Información" (click)="openInformacion(row)"></button>
+                                    <!-- <button pButton type="button" icon="pi pi-external-link" class="p-button-light mr-1" [disabled]="!row?.urlOnline" pTooltip="Link" (click)="openLink(row?.urlOnline)"></button> -->
+                                    <button pButton type="button" icon="pi pi-external-link" class="p-element p-ripple p-button-outlined p-button p-component mr-1" [disabled]="!row?.urlPortal" pTooltip="Link" (click)="openLink(row?.urlPortal)"></button>
+                                </td>
+                            </tr>
+                        </ng-template>
+    
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="7">No se encontraron datos disponibles</td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="summary">
+                            <div class="flex align-items-center justify-content-between">
+                                Total {{ servicios? totalRecords : 0 }}.
+                            </div>
+                        </ng-template>
+    
+                    </p-table>
+                </form>
+    
+                <app-servicio-form
+                    [row]="entity"
+                    [(visible)]="showDialog"
+                    [instituciones]="instituciones"
+                    [requisitos]="requisitos"
+                    [clasificadores]="clasificadores"
+                    [etiquetas]="etiquetas"
+                    (onResponse)="onResponse($event)"
+                    (setVisible)="changeDialogVisibility($event)">
+                </app-servicio-form>
+
+                <app-servicios-informacion-list
+                    [row]="entity"
+                    [(visible)]="showDialogInformacionList"
+                    (onResponse)="onResponse($event)"
+                    (setVisible)="changeDialogVisibilityInformacion($event)">
+                </app-servicios-informacion-list>
+    
+                <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+    
+            </div>
+        </div>
+    </div>
+    

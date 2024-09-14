@@ -1,0 +1,93 @@
+<p-dialog
+    header="Subdominios asociados al Dominio: {{ row?.dominio }}"
+    styleClass="p-fluid"
+    [style]="{ width: '700px', 'overflow':'auto' }"
+    [maximizable]="true"
+    [contentStyle] = "{'overflow': 'visible'}"
+    [modal]="true"
+    [(visible)]="visible"
+    (onHide)="close()">
+    <p-toolbar styleClass="p-mb-12">
+        <h5 class="p-m-0"></h5>
+        <ng-template pTemplate="right">
+                <p-splitButton label="Agregar" icon="pi pi-plus" (onClick)="openNew()" [model]="items" *ngIf="checkPermission('subdominio:crear')"></p-splitButton>
+        </ng-template>
+    </p-toolbar>
+    <form (ngSubmit)="filterModal($event)">
+            <p-table
+            #modalTable
+            dataKey="id"
+            styleClass="p-datatable-styles"
+            selectionMode="single"
+            paginatorPosition="bottom"
+            [value]="subdominios"
+            [rows]="pageSize"
+            [totalRecords]="totalRecords"
+            [loading]="loading"
+            [paginator]="true"
+            [resizableColumns]="true"
+            [sortOrder]="-1"
+            [autoLayout]="true"
+            [lazy]="true"
+            (onLazyLoad)="loadSub($event)"
+            >
+            <ng-template pTemplate="header" let-columns>
+                <tr [formGroup]="searchFormGroupSub">
+                    <!-- <th class="align-items-center" pResizableColumn>
+                        <div class="p-d-flex p-jc-between p-ai-center">Identificador</div>
+                    </th> -->
+                    <th pResizableColumn>
+                        <div pSortableColumn="subdominio" class="p-d-flex p-jc-between p-ai-center mb-2">
+                            Subdominio  <p-sortIcon field="subdominio"></p-sortIcon>
+                        </div>
+                        <input pInputText formControlName="subdominio" style="width:100%">
+                    </th>
+                    <th style="text-align: center; vertical-align: top;" class="align-items-center" pResizableColumn>
+                        <div class="p-d-flex p-jc-between p-ai-center">Acciones</div>
+                    </th>
+                    <input type="submit" hidden>
+                </tr>
+            </ng-template>
+
+
+            <ng-template pTemplate="body" let-row>
+                <tr class="p-selectable-row">
+                    <!-- <td>
+                        <span class="p-column-title">Identificador</span>
+                        {{ row?.idSubDominio }}
+                    </td>   -->
+                    <td>
+                        <span class="p-column-title">Subdominio</span>
+                        {{ row?.subdominio }}
+                    </td>                  
+                    <td style="text-align: center;" class="align-items-center">
+                        <span class="p-column-title">Acciones</span>
+                        <button pButton type="button" class="p-button-success" icon="pi pi-check-circle" *ngIf="row?.estado && checkPermission('subdominio:editar')" pTooltip="Inactivar" (click)="updateStatus(row)"></button>
+                        <button pButton type="button" class="p-button-danger" icon="pi pi-circle-off" *ngIf="!row?.estado && checkPermission('subdominio:editar')" pTooltip="Activar" (click)="updateStatus(row)"></button>
+                        <button pButton type="button" *ngIf="checkPermission('subdominio:editar')" icon="pi pi-pencil" class="p-button-warning ml-2" pTooltip="Editar" (click)="openEdit(row)"></button>
+                        <button pButton type="button" *ngIf="checkPermission('subdominio:borrar')" icon="pi pi-trash" class="p-button-danger ml-2" pTooltip="Eliminar" (click)="delete(row)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7">No se encontraron datos disponibles</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="summary">
+                <div class="flex align-items-center justify-content-between">
+                    Total {{ subdominios? totalRecords : 0 }}
+                </div>
+            </ng-template>
+
+        </p-table>
+    </form>
+    <app-subdominio-form
+        [row]="entity"
+        [(visible)]="showDialog"
+        (onResponse)="onResponse($event)"
+        (setVisible)="changeDialogVisibility($event)">
+    </app-subdominio-form>
+    
+</p-dialog>

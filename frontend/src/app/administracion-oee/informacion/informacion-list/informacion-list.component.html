@@ -1,0 +1,190 @@
+<!-- <div class="p-grid" *ngIf="checkPermission('ver:menu:administracion:datosOee')">
+    <div class="p-col-12 p-md-12">
+        <div class="card">
+            <p-toolbar styleClass="p-mb-12">
+                <h5 class="p-m-0">Información de OEE </h5>
+            </p-toolbar>
+            <p-toast></p-toast>
+            <p-tabView>
+                <p-tabPanel header="Datos de la OEE" [rightIcon]="'pi pi-fw pi-home'">
+                    <div class="formgrid grid" class="field col-12 md:col-12">
+                    </div>
+                </p-tabPanel>
+                <p-tabPanel header="Dependencias" [rightIcon]="'pi pi-fw pi-bookmark'">
+                    <div class="formgrid grid" class="field col-12 md:col-12">
+                    </div>
+                </p-tabPanel>
+            </p-tabView>
+            <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+        </div>
+    </div>
+</div> -->
+
+<!-- <div class="p-grid" *ngIf="checkPermission('ver:menu:administracion:planestic')"> -->
+<div class="p-grid">
+    <div class="p-col-12 p-md-12">
+        <div class="card">
+
+            <p-toolbar styleClass="p-mb-12">
+                <h5 class="p-m-0">Información OEE</h5>
+                <ng-template pTemplate="right">
+
+                    <!-- <button 
+                pButton pRipple label="Organigrama" 
+                icon="pi pi-sitemap" 
+                class="p-button-secondary p-mr-2 p-mb-2 mr-1" 
+                (click)="openDependencia()"
+            ></button> -->
+
+                    <!-- <p-splitButton 
+                        label="Agregar" 
+                        *ngIf="checkPermission('planes:crear')"
+                        icon="pi pi-plus" 
+                        (onClick)="openNew()" 
+                        [model]="items" 
+                    ></p-splitButton> -->
+                </ng-template>
+            </p-toolbar>
+
+            <p-toast></p-toast>
+
+            <form (ngSubmit)="table.filterGlobal('', 'contains')">
+                <p-table
+                    #table
+                    dataKey="id"
+                    styleClass="p-datatable-styles"
+                    selectionMode="single"
+                    paginatorPosition="bottom"
+                    [columns]="cols"
+                    [value]="informacion"
+                    [rows]="pageSize"
+                    [totalRecords]="totalRecords"
+                    [loading]="loading"
+                    [paginator]="true"
+                    [resizableColumns]="true"
+                    [sortOrder]="-1"
+                    [autoLayout]="true"
+                    [lazy]="true"
+                    (onLazyLoad)="load($event)"
+                >
+
+                    <ng-template pTemplate="header" let-columns>
+                        <tr [formGroup]="searchFormGroup">
+                            <th pResizableColumn style="width:16.6%">
+                                <div pSortableColumn="descripcionOee" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Descripción OEE <p-sortIcon field="descripcionOee"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="descripcionOee" style="width:100%">
+                            </th>
+                            <!-- <th pResizableColumn style="width:16.6%; text-align: center;vertical-align: top;">
+                                <div pSortableColumn="fecha" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Fecha <p-sortIcon field="fecha"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="fecha" style="width:100%">
+                            </th>
+                            <th pResizableColumn style="width:16.6%">
+                                <div pSortableColumn="linkPlan" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Link del Plan <p-sortIcon field="linkPlan"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="linkPlan" style="width:100%">
+                            </th>
+                            <th pResizableColumn style="width:16.6%">
+                                <div pSortableColumn="cantidadFuncionariosTic" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Cant. Fun. TIC <p-sortIcon field="cantidadFuncionariosTic"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="cantidadFuncionariosTic" style="width:100%">
+                            </th>
+                            <th pResizableColumn style="width:16.6%">
+                                <div pSortableColumn="cantidadFuncionariosAdmin" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Cant. Fun. Administración <p-sortIcon field="cantidadFuncionariosAdmin"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="cantidadFuncionariosAdmin" style="width:100%">
+                            </th>
+                            <th pResizableColumn style="width:16.6%">
+                                <div pSortableColumn="presupuestoTicAnual" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Presupuesto TIC Anual <p-sortIcon field="presupuestoTicAnual"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="presupuestoTicAnual" style="width:100%;">
+                            </th> -->
+                            <th pResizableColumn style="width:16.6%; text-align: center;vertical-align: top;">
+                                <div class="p-d-flex p-jc-between p-ai-center">Acciones</div>
+                            </th>
+                            <input type="submit" hidden>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-row *ngIf="checkPermission('planes:listar')">
+                        <tr class="p-selectable-row">
+                            <td class="descripcion-corta">
+                                <span class="p-column-title">Descripción OEE</span>
+                                {{ row?.descripcionOee }}
+                            </td>
+                           <!--  <td class="descripcion-corta text-center">
+                                <span class="p-column-title">Fecha</span>
+                                {{(row.fecha ? (row.fecha | date: 'dd/MM/yy') : '-')}}
+                            </td>
+                            <td class="descripcion-corta">
+                                <span class="p-column-title">linkPlan</span>
+                                {{ row?.linkPlan }}
+                            </td>
+                            <td class="descripcion-corta text-center">
+                                <span class="p-column-title">cantidadFuncionariosTic</span>
+                                {{ row?.cantidadFuncionariosTic }}
+                            </td>
+                            <td class="descripcion-corta text-center">
+                                <span class="p-column-title">cantidadFuncionariosAdmin</span>
+                                {{ row?.cantidadFuncionariosAdmin }}
+                            </td>
+                            <td class="descripcion-corta text-right" style="padding-right: 20px !important;">
+                                <span class="p-column-title">presupuestoTicAnual</span>
+                                {{ row.presupuestoTicAnual | number:'1.0-0' }}
+                            </td> -->
+                            <td class="text-center">
+                                <span class="p-column-title">Acciones</span>
+                                <button pButton type="button" class="p-button-success mr-1" icon="pi pi-check-circle" *ngIf="row?.estado" pTooltip="Inactivar" (click)="updateStatus(row)"></button>
+                                <button pButton type="button" class="p-button-danger mr-1" icon="pi pi-circle-off" *ngIf="!row?.estado" pTooltip="Activar" (click)="updateStatus(row)"></button>
+
+                                <button pButton type="button" *ngIf="checkPermission('organigrama:editar')" icon="pi pi-pencil" class="p-button-warning mr-1" pTooltip="Editar" (click)="openEdit(row)"></button>
+                                <button pButton type="button" *ngIf="checkPermission('organigrama:borrar')" icon="pi pi-trash" class="p-button-danger mr-1" pTooltip="Eliminar" (click)="delete(row)"></button>
+                                <button pButton type="button" *ngIf="checkPermission('organigrama:editar')" icon="pi pi-list" class="p-button-primary mr-1" pTooltip="Dependencias" (click)="openDependencia(row)"></button>
+                                <button pButton type="button" *ngIf="checkPermission('organigrama:editar')" icon="pi pi-sitemap" class="p-button-secondary mr-1" pTooltip="Ver Organigrama" (click)="openOrganigrama(row)"></button>
+                                <button pButton type="button" *ngIf="checkPermission('organigrama:editar')" icon="pi pi-external-link" class="p-element p-ripple p-button-outlined p-button p-component mr-1 p-button-icon-only" pTooltip="Link"></button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="4">No se encontraron datos disponibles</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="summary">
+                        <div class="flex align-items-center justify-content-between">
+                            Total {{ informacion ? totalRecords : 0 }}.
+                        </div>
+                    </ng-template>
+                </p-table>
+            </form>
+            <!-- <app-planes-tic-form
+                [row]="entity"
+                [(visible)]="showDialog"
+                (onResponse)="onResponse($event)"
+                (setVisible)="changeDialogVisibility($event)">
+            </app-planes-tic-form> -->
+            <app-informacion-dependencias-list
+                [rowDependencia]="entity"
+                [(visibleDependencia)]="showDependencia"
+                (setVisibleDependencia)="changeDialogVisibilityDependencia($event)">
+            </app-informacion-dependencias-list>
+
+            <app-informacion-organigrama 
+                [rowOrganigrama]="entity"
+                [(visibleOrganigram)]="showOrganigram"
+                (setVisibleO)="changeDialogVisibilityO($event)">
+            </app-informacion-organigrama> 
+
+            <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+        </div>
+    </div>
+</div>
+
+

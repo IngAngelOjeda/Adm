@@ -1,0 +1,165 @@
+<div class="p-grid" *ngIf="checkPermission('ver:menu:administracion:usuarios')">
+    <div class="p-col-12 p-md-12">
+        <div class="card">
+
+            <p-toolbar styleClass="p-mb-12">
+                <h5 class="p-m-0">Usuarios</h5>
+                <ng-template pTemplate="right">
+                    <p-splitButton label="Agregar" icon="pi pi-plus" (onClick)="openNew()" [model]="items" *ngIf="checkPermission('usuarios:crear')"></p-splitButton>
+                </ng-template>
+            </p-toolbar>
+
+            <p-toast></p-toast>
+
+            <p-blockUI [target]="table" [blocked]="block">
+                <p-progressSpinner class="spinner-position"></p-progressSpinner>
+            </p-blockUI>
+
+            <form (ngSubmit)="table.filterGlobal('', 'contains')">
+                <p-table
+                    #table
+                    dataKey="id"
+                    styleClass="p-datatable-styles"
+                    selectionMode="single"
+                    paginatorPosition="bottom"
+                    [columns]="cols"
+                    [value]="usuarios"
+                    [rows]="pageSize"
+                    [totalRecords]="totalRecords"
+                    [loading]="loading"
+                    [paginator]="true"
+                    [resizableColumns]="true"
+                    [sortOrder]="-1"
+                    [autoLayout]="true"
+                    [lazy]="true"
+                    (onLazyLoad)="load($event)">
+
+                    <ng-template pTemplate="header" let-columns>
+                        <tr [formGroup]="searchFormGroup">
+                            <th pResizableColumn>
+                                <div pSortableColumn="nombre" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Nombre  <p-sortIcon field="nombre"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="nombre" style="width:100%">
+                            </th>
+                            <th pResizableColumn>
+                                <div pSortableColumn="apellido" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Apellido  <p-sortIcon field="apellido"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="apellido" style="width:100%">
+                            </th>
+                            <th pResizableColumn>
+                                <div pSortableColumn="username" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Nombre Usuario <p-sortIcon field="username"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="username" style="width:100%">
+                            </th>
+                            <th pResizableColumn class="text-center">
+                                <!--div class="p-d-flex p-jc-between p-ai-center">Roles</div-->
+                                <div pSortableColumn="roles" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Roles  <p-sortIcon field="roles"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="roles" style="width:100%">
+                                
+                            </th>
+                            <th pResizableColumn>
+                                <div pSortableColumn="institucion" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Institución  <p-sortIcon field="institucion"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="institucion" style="width:100%">
+                            </th>
+                            <th pResizableColumn style="text-align: center;vertical-align: top;">
+                                <div pSortableColumn="fechaExpiracion" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Fecha Expiración <p-sortIcon field="fechaExpiracion"></p-sortIcon>
+                                </div>
+                            </th>
+
+                            <th pResizableColumn style="text-align: center;vertical-align: top;">
+                                <div pSortableColumn="estado" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Estado <p-sortIcon field="estado"></p-sortIcon>
+                                </div>
+                            </th>
+
+                            <th pResizableColumn style="text-align: center;vertical-align: top;">
+                                <div class="p-d-flex p-jc-between p-ai-center">Acción</div>
+                            </th>
+                            <input type="submit" hidden>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-row>
+                        <tr class="p-selectable-row">
+                            <td>
+                                <span class="p-column-title">Nombre</span>
+                                {{ row?.nombre }}
+                            </td>
+                            <td>
+                                <span class="p-column-title">Apellido</span>
+                                {{ row?.apellido }}
+                            </td>
+                            <td>
+                                <span class="p-column-title">Nombre Usuario</span>
+                                {{ row?.username }}
+                            </td>
+                            <td style="word-break: break-word;white-space: pre-wrap;">
+                                <span class="p-column-title">Roles</span>
+                                <span *ngFor="let item of row?.roles" style="font-size: 10px;">
+                                    <p-tag styleClass="mr-2 mb-1" severity="warning" value="{{item?.nombre }}" icon="pi pi-users"></p-tag>
+                                </span>
+                            </td>
+                            <td style="word-break: break-word;white-space: pre-wrap;">
+                                <span class="p-column-title">Institución</span>
+                                <span pTooltip="{{ row?.institucion?.nombre }}">
+                                    {{ row?.oee?.descripcionOee }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="p-column-title">Fecha Expiración</span>
+                                {{ (row.fechaExpiracion ? (row.fechaExpiracion | date : 'dd/MM/yyyy') : '-') }}
+                            </td>
+                            <td class="text-center">
+                                <span class="p-column-title">¿Está activo?</span>
+
+                                <p-checkbox [(ngModel)]="row.estado" binary="true" id="estado"(onChange)="updateUserStatus(row)" [ngModelOptions]="{standalone: true}"></p-checkbox>
+                                <!--
+                                <button pButton type="button" class="p-button-success" icon="pi pi-check-circle" *ngIf="row?.estado" pTooltip="Inactivar" (click)="delete(row)"></button>
+                                
+                                <button pButton type="button" class="p-button-danger" icon="pi pi-circle-off" *ngIf="!row?.estado" pTooltip="Activar" (click)="delete(row)"></button>
+                                -->
+                            </td>
+                            <td>
+                                <span class="p-column-title">Acción</span>
+                                <button pButton type="button" *ngIf="checkPermission('usuarios:editar')" icon="pi pi-pencil" class="p-button-warning mr-2" pTooltip="Editar" (click)="openEdit(row)"></button>
+                                <!-- <button pButton type="button" *ngIf="checkPermission('usuarios:borrar')" icon="pi pi-trash" class="p-button-danger ml-2" pTooltip="Eliminar" (click)="delete(row)"></button> -->
+                            </td>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="7">No se encontraron datos disponibles</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="summary">
+                        <div class="flex align-items-center justify-content-between">
+                            Total {{ usuarios ? totalRecords : 0 }}.
+                        </div>
+                    </ng-template>
+
+                </p-table>
+            </form>
+
+            <app-usuario-form
+                [row]="entity"
+                [roles]="roles"
+                [instituciones]="instituciones"
+                [(visible)]="showDialog"
+                (onResponse)="onResponse($event)"
+                (setVisible)="changeDialogVisibility($event)">
+            </app-usuario-form>
+
+            <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,48 @@
+<div [ngClass]="{'layout-inline-menu': true, 'layout-inline-menu-active':appMain.inlineMenuActive[key]}" [ngStyle]="style" [class]="styleClass">
+    <a class="layout-inline-menu-action flex flex-row align-items-center" [ngClass]="appMain.isHorizontal() ? 'p-3 lg:col-1 py-3' : 'p-3'" (click)="onClick($event)"
+        pTooltip="{{ name }}" [tooltipDisabled]="isTooltipDisabled">
+        <img src="assets/layout/images/avatar.png" alt="avatar" style="width: 32px; height: 32px;">
+        <span class="flex flex-column" [ngClass]="{'ml-2': !app.isRTL, 'mr-2': app.isRTL}">
+            <span class="font-bold">{{ name }}</span>
+            <span class="text-600 text-xs">{{ username }}</span>
+            <small>{{ institucion }}</small>
+        </span>
+        <i class="layout-inline-menu-icon pi pi-angle-down" [ngClass]="{'ml-auto': !app.isRTL, 'mr-auto': app.isRTL}"></i>
+    </a>
+
+    <ul class="layout-inline-menu-action-panel" [@menu]="appMain.inlineMenuActive[key] ? isHorizontalActive() ? 'visible' : 'visibleAnimated' : isHorizontalActive() ? 'hidden' : 'hiddenAnimated'">
+        <li class="layout-inline-menu-action-item" pTooltip="Mi Perfil" [tooltipDisabled]="isTooltipDisabled">
+            <a class="flex flex-row align-items-center" [attr.tabindex]="tabIndex" (click)="openChangePerfil()">
+                <i class="pi pi-user pi-fw"></i>
+                <span>Mi Perfil</span>
+            </a>
+        </li>
+        <li class="layout-inline-menu-action-item" pTooltip="Cambiar Contraseña" [tooltipDisabled]="isTooltipDisabled">
+            <a class="flex flex-row align-items-center" [attr.tabindex]="tabIndex" (click)="openChangePass()">
+                <i class="pi pi-cog pi-fw"></i>
+                <span>Cambiar contraseña</span>
+            </a>
+        </li>
+        <li class="layout-inline-menu-action-item" pTooltip="Cerrar sesión" [tooltipDisabled]="isTooltipDisabled">
+            <a class="flex flex-row align-items-center" (click)="logout($event)" [attr.tabindex]="tabIndex">
+                <i class="pi pi-power-off pi-fw"></i>
+                <span>Cerrar sesión</span>
+            </a>
+        </li>
+    </ul>
+
+    <!--p-toast position="top-right" appendTo="body" baseZIndex="2" preventOpenDuplicates="true"></p-toast-->
+
+    <app-usuario-pass
+        [(visible)]="showDialog"
+        (onResponse)="onResponse($event)"
+        (setVisible)="changeDialogVisibility($event)">
+    </app-usuario-pass>
+
+    <app-usuario-perfil
+        [(visible)]="showDialogPerfil"
+        (onResponse)="onResponse($event)"
+        (setVisible)="changeDialogPerfilVisibility($event)">
+    </app-usuario-perfil>
+
+</div>

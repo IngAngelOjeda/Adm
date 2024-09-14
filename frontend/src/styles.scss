@@ -1,0 +1,54 @@
+@import "../node_modules/primeng/resources/primeng.min.css";
+@import "../node_modules/primeflex/primeflex.scss";
+@import "../node_modules/primeicons/primeicons.css";
+@import "../node_modules/prismjs/themes/prism-coy.css";
+@import "../node_modules/@fullcalendar/daygrid/main.min.css";
+@import "../node_modules/@fullcalendar/timegrid/main.min.css";
+@import "./appdemo.scss";
+
+:root .my-inline-diff-theme {
+    --ngx-diff-border-color: #888888;
+    --ngx-diff-font-size: 1rem;
+    --ngx-diff-font-family: Consolas, Courier, monospace;
+    --ngx-diff-font-color: #000000;
+    --ngx-diff-line-number-font-color: #484848;
+    --ngx-diff-line-number-hover-font-color: #ffffff;
+    --ngx-diff-selected-border-color: #ff8000;
+    --ngx-diff-inserted-background-color: #9dff97;
+    --ngx-diff-deleted-background-color: #ff8c8c;
+    --ngx-diff-equal-background-color: #ffffff;
+    --ngx-diff-margin-background-color: #dedede;
+    --ngx-diff-line-number-width: 2rem;
+    --ngx-diff-border-width: 1px;
+    --ngx-diff-line-left-padding: 1rem;
+    --ngx-diff-bottom-spacer-height: 1rem;
+}
+
+
+:root .dark-theme .my-inline-diff-theme {
+    --ngx-diff-border-color: magenta;
+    --ngx-diff-selected-border-color: cyan;
+    --ngx-diff-font-family: Consolas;
+    --ngx-diff-equal-background-color: grey;
+    --ngx-diff-font-color: indigo;
+    --ngx-diff-border-width: 4px;
+}
+
+.error,
+.invalid {
+    color: red;
+}
+
+.p-datatable .p-datatable-tbody>tr>td {
+    padding: 3px 5px !important;
+}
+.greenC{
+    color: #9dff97
+}
+.redC{
+    color: #ff8c8c
+}
+/* Quill*/
+
+@import "../node_modules/quill/dist/quill.core.css";
+@import "../node_modules/quill/dist/quill.snow.css";

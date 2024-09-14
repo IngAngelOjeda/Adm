@@ -1,0 +1,117 @@
+<div class="p-col-12 p-md-12">
+    <p-toolbar styleClass="p-mb-12">
+        <h5 class="p-m-0"></h5>
+        <ng-template pTemplate="right">
+            <button 
+                pButton pRipple label="Organigrama" 
+                *ngIf="checkPermission('dependencia:ver')" 
+                icon="pi pi-sitemap" 
+                class="p-button-secondary p-mr-2 p-mb-2 mr-1" 
+                (click)="openOrganigrama()"
+            ></button>
+
+            <p-splitButton 
+                label="Agregar" 
+                *ngIf="checkPermission('dependencia:crear')"
+                icon="pi pi-plus" 
+                (onClick)="openNew()" 
+                [model]="items" 
+            ></p-splitButton>
+
+        </ng-template>
+    </p-toolbar>
+
+    <p-toast></p-toast>
+
+    <form  #tablaContainer (ngSubmit)="table.filterGlobal('', 'contains')">
+        <p-table #table dataKey="id" styleClass="p-datatable-styles" selectionMode="single" paginatorPosition="bottom"
+            [columns]="cols" [value]="dependencias" [rows]="pageSize" [totalRecords]="totalRecords" [loading]="loading"
+            [paginator]="true" [resizableColumns]="true" [sortOrder]="-1" [autoLayout]="true" [lazy]="true"
+            (onLazyLoad)="load($event)">
+
+            <ng-template pTemplate="header" let-columns>
+                <tr [formGroup]="searchFormGroup">
+                    <th pResizableColumn>
+                        <div pSortableColumn="codigo" class="p-d-flex p-jc-between p-ai-center mb-2">
+                            Código <p-sortIcon field="codigo"></p-sortIcon>
+                        </div>
+                        <input pInputText formControlName="codigo" style="width:100%">
+                    </th>
+                    <th pResizableColumn>
+                        <div pSortableColumn="descripcionDependencia" class="p-d-flex p-jc-between p-ai-center mb-2">
+                            Nombre Dependencia <p-sortIcon field="descripcionDependencia"></p-sortIcon>
+                        </div>
+                        <input pInputText formControlName="descripcionDependencia" style="width:100%">
+                    </th>
+                    <th pResizableColumn  style="text-align: center;vertical-align: top;">
+                        <div pSortableColumn="descripcionDependencia" class="p-d-flex p-jc-between p-ai-center mb-2">
+                            Dependencia Padre <p-sortIcon field="descripcionDependencia"></p-sortIcon>
+                        </div>
+                        <!-- <input pInputText formControlName="descripcionDependencia" style="width:100%"> -->
+                    </th>
+                    <th pResizableColumn  style="text-align: center;vertical-align: top;">
+                        <div pSortableColumn="descripcionOee" class="p-d-flex p-jc-between p-ai-center mb-2">
+                            OEE Descripción <p-sortIcon field="descripcionOee"></p-sortIcon>
+                        </div>
+                        <input pInputText formControlName="descripcionOee" style="width:100%">
+                    </th>
+                    <th pResizableColumn style="text-align: center;vertical-align: top;">
+                        <div class="p-d-flex p-jc-between p-ai-center">Acciones</div>
+                    </th>
+                    <input type="submit" hidden>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-row *ngIf="checkPermission('dependencia:listar')">
+                <tr class="p-selectable-row">
+                    <td class="descripcion-corta text-center">
+                        <span class="p-column-title">Código</span>
+                        {{ row?.codigo }}
+                    </td>
+                    <td class="descripcion-corta text-center">
+                        <span class="p-column-title">Dependencia</span>
+                        {{ row?.descripcionDependencia }}
+                    </td>
+                    <td class="descripcion-corta text-center">
+                        <span class="p-column-title">Dependencia Padre</span>
+                        {{ row.dependenciaPadre ? row.dependenciaPadre['descripcionDependencia'] : '' }}
+                    </td>
+                    <td class="descripcion-corta text-center"> 
+                        <span class="p-column-title">OEE Descripción</span>
+                        {{ row?.oee["descripcionOee"] }}
+                    </td>
+                    <td>
+                        <span class="p-column-title">Acciones</span>
+                        <button pButton type="button" class="p-button-success mr-1" icon="pi pi-check-circle" *ngIf="row?.estadoDependencia" pTooltip="Inactivar" (click)="updateStatus(row)"></button>
+                        <button pButton type="button" class="p-button-danger mr-1" icon="pi pi-circle-off" *ngIf="!row?.estadoDependencia" pTooltip="Activar" (click)="updateStatus(row)"></button>
+                        
+                        <button pButton type="button" *ngIf="checkPermission('dependencia:editar')" icon="pi pi-pencil" class="p-button-warning mr-1" pTooltip="Editar" (click)="openEdit(row)"></button> 
+                       
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="4">No se encontraron datos disponibles</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="summary">
+                <div class="flex align-items-center justify-content-between">
+                    Total {{ dependencias ? totalRecords : 0 }}.
+                </div>
+            </ng-template>
+        </p-table>
+    </form>
+
+    <app-dependencias-form
+                    [row]="entity"
+                    [(visible)]="showDialog"
+                    (onResponse)="onResponse($event)"
+                    (setVisible)="changeDialogVisibility($event)">
+    </app-dependencias-form>
+
+    <app-visor-organigrama-form 
+            [(visibleOrganigram)]="showOrganigram"
+            (setVisibleO)="changeDialogVisibilityO($event)">
+    </app-visor-organigrama-form> 
+</div>

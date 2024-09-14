@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.5.final using JasperReports Library version 6.20.5-3efcf2e67f959db3888d79f73dde2dbd7acb4f8e  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptDependenciasListado" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="33f34c02-bfc1-451c-94d5-1c4dd8737fc2">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="title" class="java.lang.String"/>
+	<parameter name="generadoPor" class="java.lang.String"/>
+	<parameter name="data" class="java.util.List"/>
+	<parameter name="fecha" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="anho" class="java.lang.String"/>
+	<field name="fecha" class="java.lang.String"/>
+	<field name="link_plan" class="java.lang.String"/>
+	<field name="cantidad_funcionarios_tic" class="java.lang.String"/>
+	<field name="cantidad_funcionarios_admin" class="java.lang.String"/>
+	<field name="presupuesto_tic_anual" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="9" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="34" splitType="Stretch">
+			<textField>
+				<reportElement x="10" y="2" width="535" height="23" uuid="7803f7a4-41d4-4483-8eab-d456bf3d1ad9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{title}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="10" y="27" width="535" height="1" uuid="5283921b-318b-4bb4-b397-f46977a38cec"/>
+				<graphicElement>
+					<pen lineColor="#E8E8E8"/>
+				</graphicElement>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="25" splitType="Stretch">
+			<line>
+				<reportElement x="3" y="24" width="547" height="1" uuid="2d5f633c-1233-4660-98f6-af795574c8ce"/>
+			</line>
+			<staticText>
+				<reportElement x="3" y="-1" width="59" height="25" uuid="79ddf7c5-ab41-4ab6-b6e2-38989390a7ce">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2ba4480d-514e-474a-82a5-bf749af9c008"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Año]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="60" y="0" width="63" height="25" uuid="9ac98460-fbd1-49a7-8e9a-3ff5d4d13a99">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="846a8fe3-e3fb-4783-83c2-6c42c1a57cd3"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="123" y="0" width="100" height="25" uuid="3927119b-3769-43dc-b82a-22325ab3f02d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2b50feaf-1cb2-4bb6-a8e6-75ee3b6fce79"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Link del Plan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="223" y="0" width="87" height="25" uuid="b79876ab-b823-49fd-b7a5-f844a0ffada4">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f177c599-130b-44b2-b8c6-9e5f923c0adf"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cant. Func. TIC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="310" y="0" width="130" height="25" uuid="b29fcd6c-fd40-425f-a285-4767ee31dd57">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="abda70fc-53fb-4ca8-b743-3166e99e699a"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cant. Func. Adm.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="440" y="0" width="112" height="25" uuid="99702afc-9a74-4359-b7be-cabad2800495">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b0244a51-d5a4-404e-8923-a2983076b430"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Presup. TIC Anual]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="31" splitType="Stretch">
+			<textField>
+				<reportElement x="3" y="0" width="59" height="20" uuid="b741cc51-438f-4e4c-9969-76ba6c90fe1b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2ba4480d-514e-474a-82a5-bf749af9c008"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{anho}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="60" y="0" width="63" height="20" uuid="4f497f0a-d9f7-4093-8b21-98cb68078f10">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="846a8fe3-e3fb-4783-83c2-6c42c1a57cd3"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="123" y="0" width="100" height="20" uuid="da09b748-2e49-45a1-9a77-fb747c3837bf">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2b50feaf-1cb2-4bb6-a8e6-75ee3b6fce79"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{link_plan}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="223" y="0" width="87" height="20" uuid="2a210cd1-78a4-4dfa-ab26-c7bc44365012">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f177c599-130b-44b2-b8c6-9e5f923c0adf"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{cantidad_funcionarios_tic}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="310" y="0" width="130" height="20" uuid="80795340-ac20-433d-a8cc-eb5c702487fe">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="abda70fc-53fb-4ca8-b743-3166e99e699a"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{cantidad_funcionarios_admin}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="440" y="0" width="112" height="20" uuid="daef2503-b8f4-4361-8599-f37563c31ef1">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b0244a51-d5a4-404e-8923-a2983076b430"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{presupuesto_tic_anual}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="6" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="26" splitType="Stretch">
+			<line>
+				<reportElement x="3" y="2" width="547" height="1" uuid="a1effb77-feda-4729-91d9-5401221bfae3"/>
+				<graphicElement>
+					<pen lineColor="#E6E6E6"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="3" y="4" width="120" height="16" uuid="ee2d6cc0-2568-4759-860a-02fb5452415b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="133" y="4" width="260" height="16" uuid="f5baab51-68d0-4f4e-914a-10931f6f8b5f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{generadoPor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="407" y="4" width="70" height="16" uuid="9900c6ba-4672-4616-a2a2-297c6bfe80c0"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="477" y="4" width="75" height="16" uuid="5f6b7a9f-4473-4eb7-9456-a4b6f4a3018f"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="1" splitType="Stretch"/>
+	</summary>
+</jasperReport>

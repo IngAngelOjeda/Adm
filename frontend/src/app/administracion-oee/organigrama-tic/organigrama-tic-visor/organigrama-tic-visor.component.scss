@@ -1,0 +1,41 @@
+.Funcionario_container_{
+    position: relative;
+    overflow: hidden;
+}
+.funcionario_container{
+    padding: 5px 0px;
+    transition: all .5s ease-in-out;
+}
+.funcionario_name_container{
+    display: flex;
+    background: #E0E0E0;
+    padding: 2px 0px;
+    border-radius: 3px;
+    justify-content: center;
+    gap: 5px;
+    align-items: center;
+}
+.funcionario_name_container div{
+    display: flex;
+    flex-direction: column;
+}
+.funcionario_name{
+    font-size: 11px;
+    font-weight: bold;
+}
+.funcionario_cargo{
+    font-size: 9px;
+}
+.abrir_funcionarios{
+    transform: rotateX(180deg);
+}
+.Funcionario_container_.close{
+    height: 1px;
+}
+.close {
+    display: none;
+}
+.contenedor_organigrama{
+    max-height: 70vh;
+    overflow-y: scroll;
+}

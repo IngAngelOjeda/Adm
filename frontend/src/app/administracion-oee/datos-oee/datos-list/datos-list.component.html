@@ -1,0 +1,121 @@
+<div class="p-col-12 p-md-12">
+
+    <p-toolbar styleClass="p-mb-12">
+        <h5 class="p-m-0"></h5>
+
+        <!-- <ng-template pTemplate="left">
+            <p-button label="Ver en Portal Paraguay" icon="pi pi-eye"></p-button>
+        </ng-template> -->
+
+        <ng-template pTemplate="right">
+            <p-button class="p-button-light mr-2" label="Ver en Portal Paraguay" icon="pi pi-external-link" (click)="openLinkPortalPY()"></p-button>
+            <p-splitButton label="Descargar" *ngIf="checkPermission('datosOee:descargar')" icon="pi pi-download"
+                [model]="items"></p-splitButton>
+        </ng-template>
+    </p-toolbar>
+
+    <p-toast></p-toast>
+    
+    <!-- <p-blockUI [target]="table" [blocked]="block">
+         <p-progressSpinner class="spinner-position"></p-progressSpinner>
+    </p-blockUI> -->
+
+    <form (ngSubmit)="table.filterGlobal('', 'contains')">
+        <p-table 
+            #table 
+            dataKey="id" 
+            styleClass="p-datatable-styles" 
+            selectionMode="single" 
+            paginatorPosition="bottom"
+            [columns]="cols" 
+            [value]="datos" 
+            [rows]="pageSize" 
+            [totalRecords]="totalRecords" 
+            [loading]="loading"
+            [paginator]="true" 
+            [resizableColumns]="true" 
+            [sortOrder]="-1" 
+            [autoLayout]="true" 
+            [lazy]="true"
+            (onLazyLoad)="load($event)">
+
+            <ng-template pTemplate="header" let-columns>
+                <tr [formGroup]="searchFormGroup">
+                    <th pResizableColumn>
+                        <div pSortableColumn="descripcionOeeInformacion" class="p-d-flex p-jc-between p-ai-center mb-2">
+                            Información <p-sortIcon field="descripcionOeeInformacion"></p-sortIcon>
+                        </div>
+                        <input pInputText formControlName="descripcionOeeInformacion" style="width:100%">
+                    </th>
+                    <th pResizableColumn>
+                        <div pSortableColumn="descripcionTipoDato"
+                            class="p-d-flex p-jc-between p-ai-center mb-2">
+                            Tipo de Dato <p-sortIcon field="descripcionTipoDato"></p-sortIcon>
+                        </div>
+                        <input pInputText formControlName="descripcionTipoDato" style="width:100%">
+                    </th>
+                    <th pResizableColumn  style="text-align: center;vertical-align: top;">
+                        <div pSortableColumn="descripcionOee" class="p-d-flex p-jc-between p-ai-center mb-2">
+                            OEE Descripción <p-sortIcon field="descripcionOee"></p-sortIcon>
+                        </div>
+                        <input pInputText formControlName="descripcionOee" style="width:100%">
+                    </th>
+                    <!-- <th pResizableColumn style="text-align: center;vertical-align: top;">
+                        <div pSortableColumn="estadoOeeInformacion" class="p-d-flex p-jc-between p-ai-center mb-2">
+                            Estado <p-sortIcon field="estadoOeeInformacion"></p-sortIcon>
+                        </div>
+                    </th> -->
+                    <th pResizableColumn style="text-align: center;vertical-align: top;">
+                        <div class="p-d-flex p-jc-between p-ai-center">Acciones</div>
+                    </th>
+                    <input type="submit" hidden>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-row *ngIf="checkPermission('datosOee:listar')">
+                <tr class="p-selectable-row">
+                    <td class="descripcion-minima" title="{{ row?.descripcionOeeInformacion }}">
+                        <span class="p-column-title">Descripcion OEE Informacion</span>
+                        {{ row?.descripcionOeeInformacion }}
+                    </td>
+                    <td class="descripcion-corta">
+                        <span class="p-column-title">Tipo de Dato</span>
+                        {{ row?.tipoDato.descripcionTipoDato }}
+                    </td>
+                    <td class="descripcion-corta text-center">
+                        <span class="p-column-title">OEE Descripción</span>
+                        {{ row?.oee.descripcionOee }}
+                    </td>
+                    <!-- <td class="descripcion-corta text-center">
+                        <span class="p-column-title">Estado</span>
+                        {{ row.estadoOeeInformacion == 'A' ? 'ACTIVO' : 'INACTIVO' }}
+                    </td> -->
+                    <td>
+                        <span class="p-column-title">Acciones</span>
+                        <button pButton type="button" *ngIf="checkPermission('datosOee:editar')" icon="pi pi-pencil"
+                            class="p-button-warning mr-1" pTooltip="Editar" (click)="openEdit(row)"></button>
+                        <button pButton type="button" icon="pi pi-external-link" class="p-button-light mr-1"
+                            [disabled]="row?.tipoDato.idTipoDato == 1 ? false : true" pTooltip="Link"
+                            (click)="openLink(row?.descripcionOeeInformacion)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="4">No se encontraron datos disponibles</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="summary">
+                <div class="flex align-items-center justify-content-between">
+                    Total {{ datos ? totalRecords : 0 }}.
+                </div>
+            </ng-template>
+        </p-table>
+    </form>
+
+    <app-datos-form [row]="entity" [(visible)]="showDialog" (onResponse)="onResponse($event)"
+        (setVisible)="changeDialogVisibility($event)">
+    </app-datos-form>
+    <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+    
+</div>

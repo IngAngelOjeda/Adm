@@ -1,0 +1,15 @@
+<p-dialog 
+    header="{{ 'Visor de Organigrama' }}" 
+    styleClass="p-fluid" 
+    [maximizable]="true"
+    [contentStyle]="{'overflow': 'visible'}" 
+    [modal]="true" 
+    [(visible)]="visibleOrganigram"
+    (onHide)="close()"
+    >
+    <div class="p-col-12 p-md-12">
+        <div class="card contenedor_organigrama">
+            <p-organizationChart [value]="data"></p-organizationChart>
+        </div>
+    </div>
+</p-dialog>

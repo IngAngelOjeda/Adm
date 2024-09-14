@@ -1,0 +1,153 @@
+<p-dialog 
+    header="{{ 'Sistema' }}" 
+    styleClass="p-fluid" 
+    [style]="{ width: '650px', 'overflow':'auto' }"
+    [maximizable]="true"
+    [contentStyle]="{'overflow': 'visible'}" 
+    [modal]="true" 
+    [(visible)]="visible"
+    (onHide)="close()">
+    <form [formGroup]="form" (ngSubmit)="guardar(form.value)">
+        <p-tabView>
+            <p-tabPanel header="Inicio" [rightIcon]="'pi pi-fw pi-home'">
+                <div class="formgrid grid">
+                    <div class="field col-12 md:col-12" *ngIf="existePermisoAdmin">
+                        <label for="oee">OEE <span class="error">*</span></label>
+                        <p-dropdown appendTo="body" [options]="instituciones" formControlName="oee" defaultLabel="Seleccione una oee" optionLabel="nombre" display="chip" [filter]="true" filterBy="nombre" [showClear]="true" placeholder="Seleccione una OEE" emptyFilterMessage="Sin resultados">
+                        </p-dropdown>
+                        <small class="invalid" *ngIf="submitted && form.controls.oee.errors?.required">La oee es requerida.</small>
+                    </div>
+                    <div class="field col-12 md:col-12">
+                        <label for="nombre">Nombre del software <span class="error">*</span></label>
+                        <input type="text" pInputText id="nombre" formControlName="nombre" required placeholder="" autocomplete="off">
+                        <small class="invalid" *ngIf="submitted && form.get('nombre').errors?.required">Nombre del software es requerido.</small>
+                    </div>
+                    <div class="field col-12 md:col-12">
+                        <label for="objetoProposito">Objetivo o propósito del Sistema <span class="error">*</span></label>
+                        <textarea rows="4" type="text" pInputTextarea id="objetoProposito" formControlName="objetoProposito" required placeholder="" autocomplete="off"></textarea>
+                        <small class="invalid" *ngIf="submitted && form.get('objetoProposito').errors?.required">El Objetivo o propósito del Sistema es requerido.</small>
+                    </div>
+                    <div class="field col-12 md:col-12">
+                        <label for="areaResponsable">Área técnica responsable <span class="error">*</span></label>
+                        <input type="text" pInputText id="areaResponsable" formControlName="areaResponsable" required placeholder="" autocomplete="off">
+                        <small class="invalid" *ngIf="submitted && form.get('areaResponsable').errors?.required">La Área técnica responsable es requerida.</small>
+                    </div>
+                    <div class="field col-12 md:col-12">
+                        <label for="tipoUso">Tipo de uso <span class="error">*</span></label>
+                        <p-dropdown appendTo="body" [options]="tipoUso" formControlName="tipoUso" [showClear]="true" display="chip" placeholder="Seleccione un tipo de uso" emptyFilterMessage="Sin resultados"></p-dropdown>
+                        <small class="invalid" *ngIf="submitted && form.get('tipoUso').errors?.required">El tipo de uso es requerida.</small>
+                    </div>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Tecnologías" [rightIcon]="'pi pi-fw pi-code'">
+                <div class="formgrid grid">
+                    <div class="field col-12 md:col-12">
+                        <label for="tecnologiaLenguaje">Lenguajes de programación utilizados </label>
+                        <input type="text" pInputText id="tecnologiaLenguaje" formControlName="tecnologiaLenguaje" placeholder="" autocomplete="off">
+                    </div>
+                    <div class="field col-12 md:col-12">
+                        <label for="tecnologiaBd">Base de datos utilizados </label>
+                        <input type="text" pInputText id="tecnologiaBd" formControlName="tecnologiaBd" placeholder="" autocomplete="off">
+                    </div>
+                    <div class="field col-12 md:col-12">
+                        <label for="tecnologiaFramework">Framework </label>
+                        <input type="text" pInputText id="tecnologiaFramework" formControlName="tecnologiaFramework" placeholder="" autocomplete="off">
+                    </div>
+                    <div class="field col-12 md:col-6">
+                        <label for="anhoCreacion">Año de creación </label>
+                        <p-inputMask mask="9999" id="anhoCreacion" formControlName="anhoCreacion" placeholder="2024"></p-inputMask>
+                    </div>
+                    <div class="field col-12 md:col-6">
+                        <label for="anhoImplementacion">Año de implementación </label>
+                        <p-inputMask mask="9999" id="anhoImplementacion" formControlName="anhoImplementacion" placeholder="2024"></p-inputMask>
+                    </div>
+                    <div class="field col-12 md:col-12">
+                        <label for="desarrolladorFabricante">Desarrollador/ Fabricante </label>
+                        <input type="text" pInputText id="desarrolladorFabricante" formControlName="desarrolladorFabricante" placeholder="" autocomplete="off">
+                    </div>
+                    
+                    <div class="mt-2 col-12 md:col-12">
+                        <p-checkbox binary="true" formControlName="poseeVigencia" id="poseeVigencia"></p-checkbox>
+                        <label class="ml-3" for="poseeVigencia">¿Está vigente?</label>
+                    </div>
+                    <div class="field col-12 md:col-6 mt-4">
+                        <label for="fechaVigencia">Fecha de vigencia </label>
+                        <p-calendar formControlName="fechaVigencia" [showIcon]="true" dateFormat="dd-mm-yy" dataType="string" name="fechaVigencia" [monthNavigator]='true' [yearNavigator]="true" yearRange="{{yearStart}}:{{yearFinal}}" appendTo="body"></p-calendar>
+                    </div>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Fuentes" [rightIcon]="'pi pi-fw pi-github'">
+                <div class="formgrid grid">
+                    <div class="mt-2 col-12 md:col-12 mt-2">
+                        <p-checkbox binary="true" formControlName="poseeCodigoFuente" id="poseeCodigoFuente"></p-checkbox>
+                        <label class="ml-3" for="poseeCodigoFuente">¿Posee código fuente?</label>
+                    </div>
+                    <div class="field col-12 md:col-12 mt-4">
+                        <label for="linkCodigoFuente">Enlace al repositorio de código fuente </label>
+                        <input type="text" pInputText id="linkCodigoFuente" formControlName="linkCodigoFuente" placeholder="" autocomplete="off">
+                    </div>
+                    <div class="field col-12 md:col-12">
+                        <label for="linkProduccion">Enlaces al sistema o módulos según disponibilidad </label>
+                        <input type="text" pInputText id="linkProduccion" formControlName="linkProduccion" placeholder="" autocomplete="off">
+                    </div>
+                    <div class="mt-2 col-12 md:col-12 mt-2">
+                        <p-checkbox binary="true" formControlName="poseeLicencia" id="poseeLicencia"></p-checkbox>
+                        <label class="ml-3" for="poseeLicencia">¿Posee licencia?</label>
+                    </div>
+                    <div class="field col-12 md:col-12 mt-4">
+                        <label for="tipoLicencia">Tipo de licencia </label>
+                        <input type="text" pInputText id="tipoLicencia" formControlName="tipoLicencia" placeholder="" autocomplete="off">
+                    </div>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Soporte" [rightIcon]="'pi pi-fw pi-users'">
+                <div class="formgrid grid">
+                    <div class="mt-2 col-12 md:col-12 mt-2">
+                        <p-checkbox binary="true" formControlName="poseeContratoMantenimiento" id="poseeContratoMantenimiento"></p-checkbox>
+                        <label class="ml-3" for="poseeContratoMantenimiento">¿Posee soporte/ mantenimiento?</label>
+                    </div>
+                    <div class="field col-12 md:col-12 mt-4">
+                        <label for="tipoSoporte">Tipo de soporte/ mantenimiento </label>
+                        <input type="text" pInputText id="tipoSoporte" formControlName="tipoSoporte" placeholder="" autocomplete="off">
+                    </div>
+                    <div class="field col-12 md:col-12">
+                        <label for="dataCenterInfraestructura">Datacenter e infraestructura de alojamiento del software </label>
+                        <input type="text" pInputText id="dataCenterInfraestructura" formControlName="dataCenterInfraestructura" placeholder="" autocomplete="off">
+                    </div>
+                    <div class="field col-12 md:col-12">
+                        <label for="costoDesarrollo">Costo estimativo de desarrollo (Gs.) </label>
+                        <input type="text" class="text-right" pInputText (input)="separadorMilesOnInput($event.target)" id="costoDesarrollo" formControlName="costoDesarrollo" placeholder="100.000.000" autocomplete="off">
+                    </div>
+                    <div class="field col-12 md:col-12">
+                        <label for="costoMantenimiento">Costo estimativo de mantenimiento </label>
+                        <input type="text" class="text-right" pInputText (input)="separadorMilesOnInput($event.target)" id="costoMantenimiento" formControlName="costoMantenimiento" placeholder="100.000.000" autocomplete="off">
+                    </div>
+                    <div class="field col-12 md:col-12">
+                        <label for="listaDesarrolladores">Lista de desarrolladores </label>
+                        <textarea rows="3" type="text" pInputTextarea id="listaDesarrolladores" formControlName="listaDesarrolladores" placeholder="" autocomplete="off"></textarea>
+                    </div>
+                </div>
+            </p-tabPanel>
+        </p-tabView>
+
+
+
+        <p-footer class="footer">
+            <div class="grid">
+                <div class="col-6 col-md-6">
+                    <button type="submit" pButton label="Guardar" icon="pi pi-save" class="p-button-outlined"></button>
+                </div>
+                <div class="col-6 col-md-6">
+                    <button type="button" pButton (click)="close()" label="Cancelar"
+                        class="p-button-danger p-button-text"></button>
+                </div>
+            </div>
+        </p-footer>
+
+    </form>
+
+    <ng-template pTemplate="footer">
+        <span style="color: red;font-size: 11px;">(*) Son campos obligatorios</span>
+    </ng-template>
+
+</p-dialog>

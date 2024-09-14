@@ -1,0 +1,152 @@
+<div class="p-grid" *ngIf="checkPermission('ver:menu:administracion:organigramatic')">
+    <div class="p-col-12 p-md-12">
+        <div class="card">
+
+            <p-toolbar styleClass="p-mb-12">
+                <h5 class="p-m-0">Organigrama TIC</h5>
+                <ng-template pTemplate="right">
+                        <button 
+                        pButton pRipple label="Ver Organigrama" 
+                        *ngIf="checkPermission('organigrama:crear')" 
+                        icon="pi pi-sitemap" 
+                        class="p-element p-ripple p-button-outlined p-button p-component mr-1"
+                        (click)="openOrganigrama()"
+                        ></button>
+                    <p-splitButton label="Agregar" *ngIf="checkPermission('organigrama:crear')" icon="pi pi-plus"
+                        (onClick)="openNew()" [model]="items"></p-splitButton>
+
+                </ng-template>
+            </p-toolbar>
+
+            <p-toast></p-toast>
+
+            <form (ngSubmit)="table.filterGlobal('', 'contains')">
+                <p-table #table dataKey="id" styleClass="p-datatable-styles" selectionMode="single"
+                    paginatorPosition="bottom" [columns]="cols" [value]="organigrama" [rows]="pageSize"
+                    [totalRecords]="totalRecords" [loading]="loading" [paginator]="true" [resizableColumns]="true"
+                    [sortOrder]="-1" [autoLayout]="true" [lazy]="true" (onLazyLoad)="load($event)"> 
+
+                    <ng-template pTemplate="header" let-columns>
+                        <tr [formGroup]="searchFormGroup">
+                            <th pResizableColumn style="width:16.6%">
+                                <div pSortableColumn="nombre" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Nombre <p-sortIcon field="nombre"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="nombre" style="width:100%">
+                            </th>
+                            <th pResizableColumn style="width:16.6%">
+                                <div pSortableColumn="apellido" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Apellido <p-sortIcon field="apellido"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="apellido" style="width:100%"> 
+                            </th>
+                            <th pResizableColumn style="width:16.6%">
+                                <div pSortableColumn="descripcionDependencia" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Dependencia <p-sortIcon field="descripcionDependencia"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="descripcionDependencia" style="width:100%">
+                            </th>
+                            <th pResizableColumn style="width:16.6%">
+                                <div pSortableColumn="cedula" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Cédula <p-sortIcon field="cedula"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="cedula" style="width:100%">
+                            </th>
+                            <th pResizableColumn style="width:16.6%">
+                                <div pSortableColumn="cargo" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Cargo <p-sortIcon field="cargo"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="cargo" style="width:100%">
+                            </th>
+                            <th pResizableColumn style="width:16.6%">
+                                <div pSortableColumn="correoInstitucional"
+                                    class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Correo Institucional <p-sortIcon field="correoInstitucional"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="correoInstitucional" style="width:100%">
+                            </th>
+                            <th pResizableColumn style="width:16.6%">
+                                <div pSortableColumn="descripcionOee"
+                                    class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Descripción OEE <p-sortIcon field="descripcionOee"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="descripcionOee" style="width:100%">
+                            </th>
+                            <th pResizableColumn style="width:16.6%; text-align: center;vertical-align: top;">
+                                <div class="p-d-flex p-jc-between p-ai-center">Acciones</div>
+                            </th>
+                            <input type="submit" hidden>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-row *ngIf="checkPermission('organigrama:listar')">
+                        <tr class="p-selectable-row">
+                            <td class="descripcion-corta text-center">
+                                <span class="p-column-title">Nombre</span>
+                                {{row?.nombre}}
+                            </td>
+                            <td class="descripcion-corta text-center">
+                                <span class="p-column-title">Apellido</span>
+                                {{ row?.apellido }}
+                            </td>
+                            <td class="descripcion-corta text-center">
+                                <span class="p-column-title">Correo Institucional</span>
+                                {{ row?.dependencia['descripcionDependencia'] }}
+                            </td>
+                            <td class="descripcion-corta text-center">
+                                <span class="p-column-title">Correo Institucional</span>
+                                {{ row?.cedula }}
+                            </td>
+                            <td class="descripcion-corta text-center">
+                                <span class="p-column-title">Cargo</span> 
+                                {{ row?.cargo }}
+                            </td>
+                            <td class="descripcion-corta text-center">
+                                <span class="p-column-title">Correo Institucional</span>
+                                {{ row?.correoInstitucional }}
+                            </td>
+                            <td class="descripcion-corta text-center">
+                                <span class="p-column-title">Correo Institucional</span>
+                                {{ row?.dependencia.oee["descripcionOee"] }}
+                            </td>
+                            <td>
+                                <span class="p-column-title">Acciones</span>
+                                <button pButton type="button" class="p-button-success mr-1" icon="pi pi-check-circle"
+                                    *ngIf="row?.estadoFuncionario" pTooltip="Inactivar"
+                                    (click)="updateStatus(row)"></button>
+                                <button pButton type="button" class="p-button-danger mr-1" icon="pi pi-circle-off"
+                                    *ngIf="!row?.estadoFuncionario" pTooltip="Activar"
+                                    (click)="updateStatus(row)"></button>
+
+                                <button pButton type="button" *ngIf="checkPermission('organigrama:editar')"
+                                    icon="pi pi-pencil" class="p-button-warning mr-1" pTooltip="Editar"
+                                    (click)="openEdit(row)"></button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="4">No se encontraron datos disponibles</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="summary">
+                        <div class="flex align-items-center justify-content-between">
+                            Total {{ organigrama ? totalRecords : 0 }}.
+                        </div>
+                    </ng-template>
+                </p-table>
+            </form>
+
+            <app-organigrama-tic-form [row]="entity" [usuarios]="usuarios" [(visible)]="showDialog" (onResponse)="onResponse($event)"
+                (setVisible)="changeDialogVisibility($event)">
+            </app-organigrama-tic-form>
+
+            <app-organigrama-tic-visor
+                [(visibleOrganigram)]="showOrganigram"
+                (setVisibleO)="changeDialogVisibilityO($event)">
+            </app-organigrama-tic-visor>
+
+            <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,77 @@
+<p-dialog header="{{ 'Rango IP' }}" styleClass="p-fluid" [style]="{ width: '600px', 'overflow':'auto' }"
+    [maximizable]="true" [contentStyle]="{'overflow': 'visible'}" [modal]="true" [(visible)]="visible"
+    (onHide)="close()">
+
+    <form [formGroup]="form" (ngSubmit)="guardar(form.value)">
+        <div class="formgrid grid">
+            <div class="col-12 md-12">
+                <div class="grid">
+                    <div class="mt-2 col-4 md:col-4">
+                        <div class="field-radiobutton">
+                                <p-radioButton formControlName="optionIp" id="optionIp1" value="optionIp1"></p-radioButton>
+                            <label for="optionIp1">IP Pública</label>
+                            <span class="pi pi-info-circle ml-3"
+                                pTooltip="También llamado IP fija es un identificador único que permite disponer de una dirección exclusiva y reconocible en Internet. Ejemplos: 168.90.179.101, 190.52.187.135"
+                                tooltipPosition="top"></span>
+                        </div>
+                    </div>
+                    <div class="mt-2 col-4 md:col-4">
+                        <div class="field-radiobutton">
+                            <p-radioButton formControlName="optionIp" id="optionIp2" value="optionIp2"></p-radioButton>
+                            <label for="optionIp2">CIDR</label>
+                            <span class="pi pi-info-circle ml-3"
+                                pTooltip="El direccionamiento interdominio sin clase (CIDR o superred) es una manera de combinar varios rangos de direcciones de clase C y formar una única red o ruta. Ejemplos: 168.90.179.101/24 (256 hosts), 190.52.187.135/28 (16 hosts) 190.52.187.135/32 (1 hosts o sería lo mismo a 190.52.187.135)"
+                                tooltipPosition="top"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="rango">Rango <span class="error">*</span></label>
+                    <input type="text" pInputText id="rango" formControlName="rango" (input)="formatoIpOnInput($event.target)" required placeholder="IP Pública o notación CIRD (ej.: 190.68.50.12 ó 181.120.56.0/16)"
+                        autocomplete="off">
+                    <small class="invalid" *ngIf="submitted && form.get('rango').errors?.required">El rango es
+                        requerido.</small>
+                        <small class="invalid" *ngIf="submitted && form.get('rango').hasError('pattern')">El rango es
+                            incorrecto.</small>
+                </div>
+                <div class="col-12 md:col-12 mt-4">
+                    <p-checkbox binary="true" formControlName="perteneceDmz" id="perteneceDmz"></p-checkbox>
+                    <label class="ml-3" for="perteneceDmz">Pertenece a IP de DMZ</label> <span
+                        class="pi pi-info-circle ml-3"
+                        pTooltip="IP que corresponde a los servicios/aplicaciones publicados hacia internet"
+                        tooltipPosition="right"></span>
+                </div>
+                <div class="col-12 md:col-12 mt-3">
+                    <p-checkbox binary="true" formControlName="perteneceIpNavegacion"
+                        id="perteneceIpNavegacion"></p-checkbox>
+                    <label class="ml-3" for="perteneceIpNavegacion">Pertenece a IP de Navegación</label> <span
+                        class="pi pi-info-circle ml-3"
+                        pTooltip="Marque esta opción sí su IP pública es utilizada por los usuarios de su LAN para conectarse a internet con el fin de navegar"
+                        tooltipPosition="right"></span>
+                </div>
+                <div class="col-12 md:col-12 mt-3 mb-3">
+                    <p-checkbox binary="true" formControlName="perteneceVpn" id="perteneceVpn"></p-checkbox>
+                    <label class="ml-3" for="perteneceVpn">Pertenece a VPN</label> <span class="pi pi-info-circle ml-3"
+                        pTooltip="En caso de tener una IP asignada al servicio de VPN, accesible desde internet (si aplica)"
+                        tooltipPosition="right"></span>
+                </div>
+            </div>
+        </div>
+        <p-footer class="footer">
+            <div class="grid">
+                <div class="col-6 col-md-6">
+                    <button type="submit" pButton label="Guardar" icon="pi pi-save" class="p-button-outlined"></button>
+                </div>
+                <div class="col-6 col-md-6">
+                    <button type="button" pButton (click)="close()" label="Cancelar"
+                        class="p-button-danger p-button-text"></button>
+                </div>
+            </div>
+        </p-footer>
+    </form>
+
+    <ng-template pTemplate="footer">
+        <span style="color: red;font-size: 11px;">(*) Son campos obligatorios</span>
+    </ng-template>
+
+</p-dialog>

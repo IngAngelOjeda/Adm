@@ -1,0 +1,37 @@
+<p-dialog
+    header="{{ 'Dominio' }}"
+    styleClass="p-fluid"
+    [style]="{ width: '600px', 'overflow':'auto' }"
+    [maximizable]="true"
+    [contentStyle] = "{'overflow': 'visible'}"
+    [modal]="true"
+    [(visible)]="visible"
+    (onHide)="close()">
+
+    <form [formGroup]="form" (ngSubmit)="guardar(form.value)">
+        <div class="formgrid grid">
+            <div class="col-12 md-12">
+                <div class="field">
+                    <label for="dominio">Dominio <span class="error">*</span></label>
+                    <input type="text" pInputText id="dominio" formControlName="dominio" required placeholder="dominio" autocomplete="off">
+                    <small class="invalid" *ngIf="submitted && form.controls.dominio.errors?.required">El dominio es requerido.</small>
+                </div>
+            </div>
+        </div>
+        <p-footer class="footer">
+            <div class="grid">
+                <div class="col-6 col-md-6">
+                    <button type="submit" pButton label="Guardar" icon="pi pi-save" class="p-button-outlined"></button>
+                </div>
+                <div class="col-6 col-md-6">
+                    <button type="button" pButton (click)="close()" label="Cancelar" class="p-button-danger p-button-text"></button>
+                </div>
+            </div>
+        </p-footer>
+    </form>
+
+    <ng-template pTemplate="footer">
+        <span style="color: red;font-size: 11px;">(*) Son campos obligatorios</span>
+    </ng-template>
+
+</p-dialog>

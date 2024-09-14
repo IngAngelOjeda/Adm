@@ -1,0 +1,54 @@
+<p-dialog header="{{ 'Información' }}" styleClass="p-fluid" [style]="{ width: '750px', 'overflow':'auto' }"
+    [maximizable]="true" [contentStyle]="{'overflow': 'visible'}" [modal]="true" [(visible)]="visible"
+    (onHide)="close()">
+    <form [formGroup]="form" (ngSubmit)="guardar(form.value)">
+        <div class="formgrid grid">
+            <div class="field col-12 md:col-12">
+                <label for="tipoDato">Tipo Dato <span class="error">*</span></label>
+                <p-dropdown appendTo="body" [options]="tipoDato" formControlName="tipoDato"
+                    defaultLabel="Seleccione una institución" optionLabel="descripcionTipoDato" display="chip"
+                    [filter]="true" filterBy="descripcionTipoDato" [showClear]="true"
+                    placeholder="Seleccione un tipo de dato" emptyFilterMessage="Sin resultados"></p-dropdown>
+                <small class="invalid" *ngIf="submitted && form.controls.tipoDato.errors?.required">El tipo de dato es
+                    requerido.</small>
+            </div>
+            <div class="field col-12 md:col-12">
+                <label class="mb-3" for="descripcionServicioInformacion">Información del tipo de dato<span
+                        class="error">*</span></label>
+                <p-editor formControlName="descripcionServicioInformacion" [style]="{ height: '130px' }">
+                    <span class="ql-formats">
+                        <button type="button" class="ql-bold" aria-label="Bold"></button>
+                        <button type="button" class="ql-italic" aria-label="Italic"></button>
+                        <button type="button" class="ql-underline" aria-label="Underline"></button>
+                    </span>
+                </p-editor>
+                <small class="invalid"
+                    *ngIf="submitted && form.controls.descripcionServicioInformacion.errors?.required">
+                    El trámite es requerido.
+                </small>
+            </div>
+            <div class="mt-1 mb-3 col-6 md:col-6">
+                <p-checkbox binary="true" formControlName="checkCode" id="checkCode"></p-checkbox>
+                <label class="ml-3" for="checkCode">Limpiar HTML</label>
+            </div>
+        </div>
+
+        <p-footer class="footer">
+            <div class="grid">
+                <div class="col-6 col-md-6">
+                    <button type="submit" pButton label="Guardar" icon="pi pi-save" class="p-button-outlined"></button>
+                </div>
+                <div class="col-6 col-md-6">
+                    <button type="button" pButton (click)="close()" label="Cancelar"
+                        class="p-button-danger p-button-text"></button>
+                </div>
+            </div>
+        </p-footer>
+
+    </form>
+
+    <ng-template pTemplate="footer">
+        <span style="color: red;font-size: 11px;">(*) Son campos obligatorios</span>
+    </ng-template>
+
+</p-dialog>

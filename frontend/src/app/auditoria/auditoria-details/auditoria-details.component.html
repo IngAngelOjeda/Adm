@@ -1,0 +1,27 @@
+<p-dialog
+    header=" Auditoría registro #{{this.row?.idRegistro}} de la tabla {{this.row?.nombreTabla}} "
+    styleClass="p-fluid"
+    [style]="{ width: '900px', 'overflow':'auto' }"
+    [maximizable]="true"
+    [contentStyle] = "{'overflow': 'visible'}"
+    [modal]="true"
+    [(visible)]="visible"
+    [position]="'top'"
+    (onHide)="close()">
+    <div class="dark-theme">
+        <inline-diff 
+            class="my-inline-diff-theme"
+            [oldText]="this.formattedJsonOld"
+            [newText]="this.formattedJsonNew"
+            [lineContextSize]="4"
+            (selectedLineChange)="selectedLineChange($event)"
+            style="width: 100%"
+        >
+        </inline-diff>
+        <div class="mt-3 mb-2">
+            <span>Antiguo Registro  <i class="pi pi-circle-fill ml-2 mr-3 redC"></i></span>  
+            <span>Nuevo Registro <i class="pi pi-circle-fill ml-2 greenC"></i></span>
+        </div>
+    </div>
+
+</p-dialog>

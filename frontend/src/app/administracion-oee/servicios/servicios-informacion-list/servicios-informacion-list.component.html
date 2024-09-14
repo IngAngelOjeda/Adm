@@ -1,0 +1,104 @@
+<p-dialog
+    header="Información asociada al Servicio"
+    styleClass="p-fluid"
+    [style]="{ width: '900px', 'overflow':'auto' }"
+    [maximizable]="true"
+    [contentStyle] = "{'overflow': 'visible'}"
+    [modal]="true"
+    [(visible)]="visible"
+    (onHide)="close()">
+    <p-toolbar styleClass="p-mb-12">
+        <h5 class="p-m-0"></h5>
+        <ng-template pTemplate="right">
+                <p-splitButton label="Agregar" icon="pi pi-plus" (onClick)="openNew()" [model]="items" *ngIf="checkPermission('servicioOee:servicioInformacion:crear')"></p-splitButton>
+        </ng-template>
+    </p-toolbar>
+    <form (ngSubmit)="filterModal($event)">
+            <p-table
+            #modalTable
+            dataKey="id"
+            styleClass="p-datatable-styles"
+            selectionMode="single"
+            paginatorPosition="bottom"
+            [value]="servicioInformacion"
+            [rows]="pageSize"
+            [totalRecords]="totalRecords"
+            [loading]="loading"
+            [paginator]="true"
+            [resizableColumns]="true"
+            [sortOrder]="-1"
+            [autoLayout]="true"
+            [lazy]="true"
+            (onLazyLoad)="loadInformacion($event)"
+            >
+            <ng-template pTemplate="header" let-columns>
+                <tr [formGroup]="searchFormGroupInformacion">
+                    <!-- <th class="align-items-center" pResizableColumn>
+                        <div class="p-d-flex p-jc-between p-ai-center">Identificador</div>
+                    </th> -->
+                    <th pResizableColumn>
+                        <div pSortableColumn="descripcionServicioInformacion" class="p-d-flex p-jc-between p-ai-center mb-2">
+                            Información  <p-sortIcon field="descripcionServicioInformacion"></p-sortIcon>
+                        </div>
+                        <input pInputText formControlName="descripcionServicioInformacion" style="width:100%">
+                    </th>
+                    <th pResizableColumn>
+                        <div pSortableColumn="descripcionTipoDato" class="p-d-flex p-jc-between p-ai-center mb-2">
+                            Tipo de Dato  <p-sortIcon field="descripcionTipoDato"></p-sortIcon>
+                        </div>
+                        <input pInputText formControlName="descripcionTipoDato" style="width:100%">
+                    </th>
+                    <th style="text-align: center; vertical-align: top;" class="align-items-center" pResizableColumn>
+                        <div class="p-d-flex p-jc-between p-ai-center">Acciones</div>
+                    </th>
+                    <input type="submit" hidden>
+                </tr>
+            </ng-template>
+
+
+            <ng-template pTemplate="body" let-row>
+                <tr class="p-selectable-row">
+                    <!-- <td>
+                        <span class="p-column-title">Identificador</span>
+                        {{ row?.idServicioInformacion }}
+                    </td>   -->
+                    <td class="descripcion-corta" title="{{ row?.descripcionServicioInformacion}}">
+                        <span class="p-column-title">Información</span>
+                        {{ row?.descripcionServicioInformacion }}
+                    </td>  
+                    <td>
+                        <span class="p-column-title">Tipo de Dato</span>
+                        {{ row?.tipoDato.descripcionTipoDato }}
+                    </td>                 
+                    <td style="text-align: center;" class="align-items-center">
+                        <span class="p-column-title">Acciones</span>
+                        <button pButton type="button" class="p-button-success" icon="pi pi-check-circle" *ngIf="row?.estadoServicioInformacion === 'A' && checkPermission('servicioOee:servicioInformacion:editar')" pTooltip="Inactivar" (click)="updateStatus(row)"></button>
+                        <button pButton type="button" class="p-button-danger" icon="pi pi-circle-off" *ngIf="row?.estadoServicioInformacion  === 'I' && checkPermission('servicioOee:servicioInformacion:editar')" pTooltip="Activar" (click)="updateStatus(row)"></button>
+                        <button pButton type="button" *ngIf="checkPermission('servicioOee:servicioInformacion:editar')" icon="pi pi-pencil" class="p-button-warning ml-2" pTooltip="Editar" (click)="openEdit(row)"></button>
+                        <button pButton type="button" *ngIf="checkPermission('servicioOee:servicioInformacion:borrar')" icon="pi pi-trash" class="p-button-danger ml-2" pTooltip="Eliminar" (click)="delete(row)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7">No se encontraron datos disponibles</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="summary">
+                <div class="flex align-items-center justify-content-between">
+                    Total {{ servicioInformacion? totalRecords : 0 }}
+                </div>
+            </ng-template>
+
+        </p-table>
+    </form>
+    <app-servicios-informacion-form
+        [row]="entity"
+        [servicio]="servicio"
+        [tipoDato]="tipoDato"
+        [(visible)]="showDialog"
+        (onResponse)="onResponse($event)"
+        (setVisible)="changeDialogVisibility($event)">
+    </app-servicios-informacion-form>
+</p-dialog>

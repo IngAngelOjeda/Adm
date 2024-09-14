@@ -1,0 +1,13 @@
+:host ::ng-deep .p-cascadeselect-panel {
+    top:0 !important;
+    border-left: 2px solid #f30 !important;
+    li{
+        &.p-cascadeselect-item{
+            border-left: 2px solid #f30 !important
+        }
+    }
+}
+
+:host ::ng-deep .p-dialog {
+    .p-dialog-content{ padding-bottom: 0; }
+}

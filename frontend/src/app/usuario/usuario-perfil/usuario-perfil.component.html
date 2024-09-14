@@ -1,0 +1,52 @@
+<p-dialog 
+appendTo="body"
+draggable="true"
+header="Mi Perfil"
+styleClass="p-fluid"
+[style]="{ width: '650px', 'overflow':'auto' }"
+[maximizable]="true"
+[modal]="true"
+[(visible)]="visible"
+(onHide)="close()">
+    <form [formGroup]="form" (ngSubmit)="guardar(form.value)">
+        <div class="formgrid grid">
+            <div class="field col-12 md:col-6">
+                <label for="nombre">Nombres <span class="error">*</span></label>
+                <input type="text" pInputText id="nombre" formControlName="nombre" required (input)="$event.target.value = $event.target.value.toUpperCase()" placeholder="nombres">
+                <small class="invalid" *ngIf="submitted && form.controls.nombre.errors?.required">El nombre es requerido.</small>
+            </div>
+            <div class="field col-12 md:col-6">
+                <label for="apellido">Apellidos <span class="error">*</span></label>
+                <input type="text" pInputText id="apellido" formControlName="apellido" required (input)="$event.target.value = $event.target.value.toUpperCase()" placeholder="apellidos">
+                <small class="invalid" *ngIf="submitted && form.controls.apellido.errors?.required">El apellido es requerido.</small>
+            </div>
+            <div class="field col-12 md:col-6">
+                <label for="cargo">Cargo </label>
+                <input type="text" pInputText id="cargo"
+                    (input)="$event.target.value = $event.target.value.toUpperCase()" formControlName="cargo" placeholder="cargo">
+            </div>
+            <div class="field col-12 md:col-6">
+                <label for="telefono">Teléfono <span class="error">*</span></label>
+                <p-inputMask mask="9999 999 999" id="telefono" formControlName="telefono" placeholder="9999 999 999" required></p-inputMask>
+                <small class="invalid" *ngIf="submitted && form.controls.telefono.errors?.required">El teléfono particular es requerido.</small>
+            </div>
+        </div>
+        
+        <p-footer class="footer">
+            <div class="grid">
+                <div class="col-6 col-md-6">
+                    <button type="submit" pButton label="Guardar" icon="pi pi-save" class="p-button-outlined"></button>
+                </div>
+                <div class="col-6 col-md-6">
+                    <button type="button" pButton (click)="close()" label="Cancelar"
+                        class="p-button-danger p-button-text"></button>
+                </div>
+            </div>
+        </p-footer>
+    </form>
+
+    <ng-template pTemplate="footer">
+        <span style="color: red;font-size: 11px;">(*) Son campos obligatorios</span>
+    </ng-template>
+
+</p-dialog>

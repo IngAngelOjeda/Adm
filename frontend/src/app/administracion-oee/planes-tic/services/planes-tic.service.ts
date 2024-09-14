@@ -1,0 +1,100 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpErrorHandler } from '../../../shared/handlers/http.error.handler';
+import { finalize, catchError } from 'rxjs/operators';
+import { MessageResponse } from '../../../shared/models/message-response.model';
+import { PlanesTic } from '../models/planes-tic.model';
+import { headers } from '../../../shared/helpers/util';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class PlanesTicService {
+
+  private handler: HttpErrorHandler = new HttpErrorHandler();
+  private loading = new BehaviorSubject<boolean>(false);
+
+  constructor(
+    private http: HttpClient
+  ) { }
+
+  connect(): Observable<boolean> {
+    return this.loading.asObservable();
+  }
+
+  disconnet(): void {
+    this.loading.complete();
+  }
+
+  getAll(filter: string, pageSize: number, start: number, sortField: string, sortAsc: boolean, advancedFilter: any): Observable<MessageResponse> {
+    this.loading.next(true);
+
+    let params = new HttpParams();
+    if (filter) params = params.set('filter', filter);
+    if (sortField) params = params.set('sortField', sortField);
+
+    params = params
+        .set('page', `${Math.ceil(start / pageSize)}`)
+        .set('pageSize', `${pageSize}`)
+        .set('sortAsc', `${sortAsc}`);
+
+    Object.keys(advancedFilter).map((key) => {
+        const searchValue = advancedFilter[key] != null && advancedFilter[key] != 'null' ? advancedFilter[key] : '';
+        params = params.set(key, searchValue);
+    });
+
+    return this.http.get<MessageResponse>("api/plan/", { params, headers })
+      .pipe(finalize(() => {this.loading.next(false) }))
+      .pipe(catchError(this.handler.handleError<MessageResponse>("planes:listar")));
+  }
+
+  getPermisos(): Observable<MessageResponse>  {
+    this.loading.next(true);
+    return this.http.get<MessageResponse>("api/permiso/list", { headers })
+    .pipe(finalize(() => { this.loading.next(false); }))
+    .pipe(catchError(this.handler.handleError<MessageResponse>("permiso:get",null)));
+  }
+
+  create(data: PlanesTic): Observable<MessageResponse> {
+    this.loading.next(true);
+    return this.http.post<MessageResponse>('api/plan/create', data, { headers })
+      .pipe(finalize(() => { this.loading.next(false) }))
+      .pipe(catchError(this.handler.handlePostError<MessageResponse>('planes:create')));
+  }
+
+  update(id: number, data: PlanesTic): Observable<MessageResponse> {
+    this.loading.next(true);
+    return this.http.put<MessageResponse>(`api/plan/${id}`, data, { headers })
+      .pipe(finalize(() => { this.loading.next(false) }))
+      .pipe(catchError(this.handler.handlePostError<MessageResponse>('planes:update'))); 
+  }
+
+  updateStatus(id: number): Observable<MessageResponse> {
+    this.loading.next(true);
+    return this.http.put<MessageResponse>(`api/plan/${id}/update-status`, { headers })
+      .pipe(finalize(() => { this.loading.next(false) }))
+      .pipe(catchError(this.handler.handlePostError<MessageResponse>('plan:updateStatus')));
+  } 
+
+  delete(id: number): Observable<MessageResponse> {
+    this.loading.next(true);
+    return this.http.delete<MessageResponse>(`api/plan/${id}/delete`, { headers })
+      .pipe(finalize(() => { this.loading.next(false) }))
+      .pipe(catchError(this.handler.handlePostError<MessageResponse>('planes:delete')));
+  }
+
+  /* INFORME PARAMETRADO */
+  getInforme(advancedFilter: any, formato: string, id: number, permiso: boolean): Observable<Blob> {
+    this.loading.next(true);
+    let params = new HttpParams();
+    params = params
+        .set('permiso', `${permiso}`)
+    Object.keys(advancedFilter).map((key) => {
+        const searchValue = advancedFilter[key] != null && advancedFilter[key] != 'null' ? advancedFilter[key] : '';
+        params = params.set(key, searchValue);
+    });
+    return this.http.get(`api/plan/downloadReport/${formato}/${id}`, {responseType: 'blob', params, headers})
+  }
+
+}

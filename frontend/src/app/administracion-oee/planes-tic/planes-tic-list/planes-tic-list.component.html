@@ -1,0 +1,144 @@
+<div class="p-grid" *ngIf="checkPermission('ver:menu:administracion:planestic')">
+    <div class="p-col-12 p-md-12">
+        <div class="card">
+
+            <p-toolbar styleClass="p-mb-12">
+                <h5 class="p-m-0">Planes TIC</h5>
+                <ng-template pTemplate="right">
+                    <p-splitButton 
+                        label="Agregar" 
+                        *ngIf="checkPermission('planes:crear')"
+                        icon="pi pi-plus" 
+                        (onClick)="openNew()" 
+                        [model]="items" 
+                    ></p-splitButton>
+                </ng-template>
+            </p-toolbar>
+
+            <p-toast></p-toast>
+
+            <form (ngSubmit)="table.filterGlobal('', 'contains')">
+                <p-table
+                    #table
+                    dataKey="id"
+                    styleClass="p-datatable-styles"
+                    selectionMode="single"
+                    paginatorPosition="bottom"
+                    [columns]="cols"
+                    [value]="planes"
+                    [rows]="pageSize"
+                    [totalRecords]="totalRecords"
+                    [loading]="loading"
+                    [paginator]="true"
+                    [resizableColumns]="true"
+                    [sortOrder]="-1"
+                    [autoLayout]="true"
+                    [lazy]="true"
+                    (onLazyLoad)="load($event)"
+                >
+
+                    <ng-template pTemplate="header" let-columns>
+                        <tr [formGroup]="searchFormGroup">
+                            <th pResizableColumn style="width:16.6%">
+                                <div pSortableColumn="anho" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Año <p-sortIcon field="anho"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="anho" style="width:100%">
+                            </th>
+                            <th pResizableColumn style="width:16.6%; text-align: center;vertical-align: top;">
+                                <div pSortableColumn="fecha" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Fecha <p-sortIcon field="fecha"></p-sortIcon>
+                                </div>
+                                <!-- <input pInputText formControlName="fecha" style="width:100%"> -->
+                            </th>
+                            <th pResizableColumn style="width:16.6%">
+                                <div pSortableColumn="linkPlan" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Link del Plan <p-sortIcon field="linkPlan"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="linkPlan" style="width:100%">
+                            </th>
+                            <th pResizableColumn style="width:16.6%">
+                                <div pSortableColumn="cantidadFuncionariosTic" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Cant. Fun. TIC <p-sortIcon field="cantidadFuncionariosTic"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="cantidadFuncionariosTic" style="width:100%">
+                            </th>
+                            <th pResizableColumn style="width:16.6%">
+                                <div pSortableColumn="cantidadFuncionariosAdmin" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Cant. Fun. Administración <p-sortIcon field="cantidadFuncionariosAdmin"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="cantidadFuncionariosAdmin" style="width:100%">
+                            </th>
+                            <th pResizableColumn style="width:16.6%">
+                                <div pSortableColumn="presupuestoTicAnual" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Presupuesto TIC Anual <p-sortIcon field="presupuestoTicAnual"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="presupuestoTicAnual" style="width:100%;">
+                            </th>
+                            <th pResizableColumn style="width:16.6%; text-align: center;vertical-align: top;">
+                                <div class="p-d-flex p-jc-between p-ai-center">Acciones</div>
+                            </th>
+                            <input type="submit" hidden>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-row *ngIf="checkPermission('planes:listar')">
+                        <tr class="p-selectable-row">
+                            <td class="descripcion-corta text-center">
+                                <span class="p-column-title">Año</span>
+                                {{ row?.anho }}
+                            </td>
+                            <td class="descripcion-corta text-center">
+                                <span class="p-column-title">Fecha</span>
+                                {{(row.fecha ? (row.fecha | date: 'dd/MM/yy') : '-')}}
+                            </td>
+                            <td class="descripcion-corta">
+                                <span class="p-column-title">linkPlan</span>
+                                {{ row?.linkPlan }}
+                            </td>
+                            <td class="descripcion-corta text-center">
+                                <span class="p-column-title">cantidadFuncionariosTic</span>
+                                {{ row?.cantidadFuncionariosTic }}
+                            </td>
+                            <td class="descripcion-corta text-center">
+                                <span class="p-column-title">cantidadFuncionariosAdmin</span>
+                                {{ row?.cantidadFuncionariosAdmin }}
+                            </td>
+                            <td class="descripcion-corta text-right" style="padding-right: 20px !important;">
+                                <span class="p-column-title">presupuestoTicAnual</span>
+                                {{ row.presupuestoTicAnual | number:'1.0-0' }}
+                            </td>
+                            <td>
+                                <span class="p-column-title">Acciones</span>
+                                <button pButton type="button" class="p-button-success mr-1" icon="pi pi-check-circle" *ngIf="row?.estado" pTooltip="Inactivar" (click)="updateStatus(row)"></button>
+                                <button pButton type="button" class="p-button-danger mr-1" icon="pi pi-circle-off" *ngIf="!row?.estado" pTooltip="Activar" (click)="updateStatus(row)"></button>
+
+                                <button pButton type="button" *ngIf="checkPermission('planes:editar')" icon="pi pi-pencil" class="p-button-warning mr-1" pTooltip="Editar" (click)="openEdit(row)"></button>
+                                <button pButton type="button" *ngIf="checkPermission('planes:borrar')" icon="pi pi-trash" class="p-button-danger" pTooltip="Eliminar" (click)="delete(row)"></button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="4">No se encontraron datos disponibles</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="summary">
+                        <div class="flex align-items-center justify-content-between">
+                            Total {{ planes ? totalRecords : 0 }}.
+                        </div>
+                    </ng-template>
+                </p-table>
+            </form>
+            <app-planes-tic-form
+                [row]="entity"
+                [(visible)]="showDialog"
+                (onResponse)="onResponse($event)"
+                (setVisible)="changeDialogVisibility($event)">
+            </app-planes-tic-form>
+            <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,129 @@
+<div class="p-grid" *ngIf="checkPermission('ver:menu:activostic:rangoip')">
+    <div class="p-col-12 p-md-12">
+        <div class="card">
+
+            <p-toolbar styleClass="p-mb-12">
+                <h5 class="p-m-0">Rango IP</h5>
+                <ng-template pTemplate="right">
+                        <p-splitButton label="Agregar" icon="pi pi-plus" (onClick)="openNew()" [model]="items" *ngIf="checkPermission('rangoip:crear')"></p-splitButton>
+                </ng-template>
+            </p-toolbar>
+
+            <p-toast></p-toast>
+
+            <p-blockUI [target]="table" [blocked]="block">
+                <p-progressSpinner class="spinner-position"></p-progressSpinner>
+            </p-blockUI>
+
+            <form (ngSubmit)="filterPrincipal($event)">
+                <p-table
+                    #table
+                    dataKey="id"
+                    styleClass="p-datatable-styles"
+                    selectionMode="single"
+                    paginatorPosition="bottom"
+                    [columns]="cols"
+                    [value]="rangoip"
+                    [rows]="pageSize"
+                    [totalRecords]="totalRecords"
+                    [loading]="loading"
+                    [paginator]="true"
+                    [resizableColumns]="true"
+                    [sortOrder]="-1"
+                    [autoLayout]="true"
+                    [lazy]="true"
+                    (onLazyLoad)="load($event)">
+
+                    <ng-template pTemplate="header" let-columns>
+                        <tr [formGroup]="searchFormGroup">
+                            <th pResizableColumn>
+                                <div pSortableColumn="rango" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Rango  <p-sortIcon field="rango"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="rango" style="width:100%">
+                            </th>
+                            <th pResizableColumn>
+                                <div pSortableColumn="descripcionOee" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Institución  <p-sortIcon field="descripcionOee"></p-sortIcon>
+                                </div>
+                                <input pInputText formControlName="descripcionOee" style="width:100%">
+                            </th>
+                            <th pResizableColumn style="vertical-align: top; text-align: center;">
+                                <div pSortableColumn="perteneceDmz" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Pertenece a Dmz <p-sortIcon field="perteneceDmz"></p-sortIcon>
+                                </div>
+                            </th>
+                            <th pResizableColumn style="vertical-align: top; text-align: center;">
+                                <div pSortableColumn="perteneceIpNavegacion" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Pertenece a ip navegación  <p-sortIcon field="perteneceIpNavegacion"></p-sortIcon>
+                                </div>
+                            </th>
+                            <th pResizableColumn style="vertical-align: top; text-align: center;">
+                                <div pSortableColumn="destacado" class="p-d-flex p-jc-between p-ai-center mb-2">
+                                    Pertenece a vpn  <p-sortIcon field="perteneceVpn"></p-sortIcon>
+                                </div>
+                            </th>
+
+
+                            <th style="text-align: center;vertical-align: top;" class="align-items-center" pResizableColumn>
+                                <div class="p-d-flex p-jc-between p-ai-center">Acciones</div>
+                            </th>
+                            <input type="submit" hidden>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-row>
+                        <tr class="p-selectable-row">
+                            <td>
+                                <span class="p-column-title">Rango</span>
+                                {{ row?.rango }}
+                            </td>
+                            <td class="descripcion-corta" title="{{row?.oee.descripcionOee}}">
+                                <span class="p-column-title"></span>
+                                {{ row?.oee.descripcionOee }}
+                            </td>
+                            <td style="text-align: center;">
+                                <span>{{ row?.perteneceDmz ? 'SI' : 'NO' }}</span>
+                            </td>
+                            <td style="text-align: center;">
+                                <span>{{ row?.perteneceIpNavegacion ? 'SI' : 'NO' }}</span>
+                            </td>
+                            <td style="text-align: center;">
+                                <span>{{ row?.perteneceVpn ? 'SI' : 'NO' }}</span>
+                            </td>                
+                            <td style="text-align: center;" class="align-items-center">
+                                <span class="p-column-title">Acciones</span>
+                                <button pButton type="button" class="p-button-success" icon="pi pi-check-circle" *ngIf="row?.estado && checkPermission('rangoip:editar')" pTooltip="Inactivar" (click)="updateStatus(row)"></button>
+                                <button pButton type="button" class="p-button-danger" icon="pi pi-circle-off" *ngIf="!row?.estado && checkPermission('rangoip:editar')" pTooltip="Activar" (click)="updateStatus(row)"></button>
+                                <button pButton type="button" *ngIf="checkPermission('rangoip:editar')" icon="pi pi-pencil" class="p-button-warning ml-2" pTooltip="Editar" (click)="openEdit(row)"></button>
+                                <button pButton type="button" *ngIf="checkPermission('rangoip:borrar')" icon="pi pi-trash" class="p-button-danger ml-2" pTooltip="Eliminar" (click)="delete(row)"></button>
+                            </td>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="7">No se encontraron datos disponibles</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="summary">
+                        <div class="flex align-items-center justify-content-between">
+                            Total {{ rangoip? totalRecords : 0 }}
+                        </div>
+                    </ng-template>
+
+                </p-table>
+            </form>
+
+            <app-rango-ip-form
+                [row]="entity"
+                [(visible)]="showDialog"
+                (onResponse)="onResponse($event)"
+                (setVisible)="changeDialogVisibility($event)">
+            </app-rango-ip-form>
+
+            <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+        </div>
+    </div>
+</div>

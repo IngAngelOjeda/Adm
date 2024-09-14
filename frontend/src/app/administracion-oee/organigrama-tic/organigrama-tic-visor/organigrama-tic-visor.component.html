@@ -1,0 +1,39 @@
+<p-dialog header="{{ 'Visor de Organigrama' }}" styleClass="p-fluid" [maximizable]="true"
+    [contentStyle]="{'overflow': 'visible'}" [modal]="true" [(visible)]="visibleOrganigram" (onHide)="close()">
+    <div class="p-col-12 p-md-12">
+
+        <p-toolbar styleClass="p-mb-12">
+            <h5 class="p-m-0"></h5>
+            <!-- <h5 class="p-m-0">Organigrama TIC</h5> -->
+            <ng-template pTemplate="right">
+                <button pButton pRipple label="Ver Funcionarios" icon="pi pi-user"
+                class="p-element p-ripple p-button-outlined p-button p-component" (click)="toggleFuncionarios()"></button>
+            </ng-template>
+        </p-toolbar>
+        
+        <div class="card flex justify-content-center overflow-x-auto overflow-y-auto contenedor_organigrama">
+            <p-organizationChart [value]="data" selectionMode="multiple" [(selection)]="selectedNodes">
+                <ng-template let-node pTemplate="person">
+                    <div class="p-2 text-center">
+                        <div class="font-bold">{{ node.data.name }}</div>
+
+                        <div class="Funcionario_container_" [ngClass]="{'close': isClosed}">
+
+                            <div class="funcionario_container" *ngFor="let funcionario of node.data.funcionarios">
+                                <div class="funcionario_name_container">
+                                    <div>
+                                        <span class="funcionario_name">{{funcionario.nombre}}
+                                            {{funcionario.apellido}}</span>
+                                        <span class="funcionario_cargo">{{funcionario.cargo}}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </ng-template>
+            </p-organizationChart>
+        </div>
+
+    </div>
+</p-dialog>

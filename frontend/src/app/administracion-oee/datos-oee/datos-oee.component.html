@@ -1,0 +1,23 @@
+<div class="p-grid" *ngIf="checkPermission('ver:menu:administracion:datosOee')">
+    <div class="p-col-12 p-md-12">
+        <div class="card">
+            <p-toolbar styleClass="p-mb-12">
+                <h5 class="p-m-0">Datos OEE </h5>
+            </p-toolbar>
+            <p-toast></p-toast>
+            <p-tabView>
+                <p-tabPanel header="Datos de la OEE" [rightIcon]="'pi pi-fw pi-home'">
+                    <div class="formgrid grid" class="field col-12 md:col-12">
+                        <app-datos-list></app-datos-list>
+                    </div>
+                </p-tabPanel>
+                <p-tabPanel header="Dependencias" [rightIcon]="'pi pi-fw pi-bookmark'">
+                    <div class="formgrid grid" class="field col-12 md:col-12">
+                        <app-dependencias-list></app-dependencias-list>
+                    </div>
+                </p-tabPanel>
+            </p-tabView>
+            <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+        </div>
+    </div>
+</div>
